@@ -6,8 +6,9 @@ import { ProductCard } from "@/components/ProductCard";
 import { CartDrawer } from "@/components/CartDrawer";
 import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/product";
-import { Leaf, Zap, Shield, Search, User } from "lucide-react";
+import { Leaf, Zap, Shield, Search, User, LogIn } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { User as SupabaseUser } from "@supabase/supabase-js";
 import heroBanner from "@/assets/hero-banner.jpg";
 
 const Index = () => {
@@ -16,7 +17,20 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     fetchProducts();
@@ -75,8 +89,19 @@ const Index = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            {user ? (
+              <Button variant="ghost" size="sm" onClick={() => navigate("/profile")}>
+                <User className="h-4 w-4 mr-2" />
+                Profile
+              </Button>
+            ) : (
+              <Button variant="ghost" size="sm" onClick={() => navigate("/auth")}>
+                <LogIn className="h-4 w-4 mr-2" />
+                Login
+              </Button>
+            )}
             <Button variant="ghost" size="sm" onClick={() => navigate("/admin")}>
-              <User className="h-4 w-4" />
+              Admin
             </Button>
             <CartDrawer />
           </div>
