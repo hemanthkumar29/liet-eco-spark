@@ -22,6 +22,7 @@ export type Database = {
           order_id: string
           products: Json
           section: string
+          status: string
           student_name: string
           student_roll: string
           total_amount: number
@@ -34,6 +35,7 @@ export type Database = {
           order_id: string
           products: Json
           section: string
+          status?: string
           student_name: string
           student_roll: string
           total_amount: number
@@ -46,6 +48,7 @@ export type Database = {
           order_id?: string
           products?: Json
           section?: string
+          status?: string
           student_name?: string
           student_roll?: string
           total_amount?: number
