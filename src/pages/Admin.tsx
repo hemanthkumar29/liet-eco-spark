@@ -29,7 +29,13 @@ const Admin = () => {
 
   const fetchOrders = async () => {
     const { data } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
-    setOrders((data || []) as unknown as Order[]);
+    if (data) {
+      setOrders(data.map(order => ({
+        ...order,
+        created_at: order.created_at || '',
+        products: order.products as any
+      })));
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
