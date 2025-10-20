@@ -25,6 +25,5 @@ export interface Order {
   department: string;
   products: CartItem[];
   total_amount: number;
-  status: string;
   created_at: string;
 }
