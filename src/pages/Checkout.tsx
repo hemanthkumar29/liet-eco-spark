@@ -38,12 +38,12 @@ const Checkout = () => {
 
       const orderId = `LIET-ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
-      const { error } = await supabase.from("orders").insert({
+      const { error } = await supabase.from("orders").insert([{
         order_id: orderId,
         ...formData,
-        products: items,
+        products: items as any,
         total_amount: getTotalAmount(),
-      });
+      }]);
 
       if (error) throw error;
 

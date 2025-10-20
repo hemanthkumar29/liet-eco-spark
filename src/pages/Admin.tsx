@@ -29,7 +29,7 @@ const Admin = () => {
 
   const fetchOrders = async () => {
     const { data } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
-    setOrders(data || []);
+    setOrders((data || []) as Order[]);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
