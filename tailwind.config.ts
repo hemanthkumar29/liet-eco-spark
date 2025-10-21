@@ -52,6 +52,13 @@ export default {
           DEFAULT: "hsl(var(--trust))",
           foreground: "hsl(var(--trust-foreground))",
         },
+        liet: {
+          primary: "hsl(var(--liet-primary))",
+          accent: "hsl(var(--liet-accent))",
+          highlight: "hsl(var(--liet-highlight))",
+          bg: "hsl(var(--liet-bg))",
+          muted: "hsl(var(--liet-muted))",
+        },
       },
       backgroundImage: {
         'gradient-hero': 'var(--gradient-hero)',

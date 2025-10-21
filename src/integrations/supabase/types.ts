@@ -22,9 +22,11 @@ export type Database = {
           order_id: string
           products: Json
           section: string
+          status: string
           student_name: string
           student_roll: string
           total_amount: number
+          user_id: string | null
           year: string
         }
         Insert: {
@@ -34,9 +36,11 @@ export type Database = {
           order_id: string
           products: Json
           section: string
+          status?: string
           student_name: string
           student_roll: string
           total_amount: number
+          user_id?: string | null
           year: string
         }
         Update: {
@@ -46,9 +50,11 @@ export type Database = {
           order_id?: string
           products?: Json
           section?: string
+          status?: string
           student_name?: string
           student_roll?: string
           total_amount?: number
+          user_id?: string | null
           year?: string
         }
         Relationships: []
@@ -89,6 +95,30 @@ export type Database = {
           name?: string
           price?: number
           stock?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string | null
+          id: string
+          phone_number: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          phone_number: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          phone_number?: string
+          updated_at?: string | null
         }
         Relationships: []
       }

@@ -8,6 +8,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import Admin from "./pages/Admin";
+import AdminOrders from "./pages/AdminOrders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/._admin_hidden_link_8462" element={<AdminOrders />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
