@@ -8,54 +8,62 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 20% 15%;
+    /* Energy Conservation Theme - Light Green/White Background */
+    --background: 120 33% 97%;
+    --foreground: 150 20% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 20% 15%;
+    --card-foreground: 150 20% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 20% 15%;
+    --popover-foreground: 150 20% 15%;
 
-    /* LIET Sky Blue - Primary Brand Color */
-    --primary: 199 89% 48%;
+    /* LIET Primary - Deep Leaf Green */
+    --primary: 158 67% 32%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 199 89% 65%;
+    --primary-glow: 158 67% 45%;
 
-    /* Eco Green - Secondary Accent */
-    --secondary: 158 64% 52%;
-    --secondary-foreground: 0 0% 100%;
+    /* LIET Accent - Lime/Energy Green */
+    --secondary: 74 69% 51%;
+    --secondary-foreground: 150 20% 15%;
 
     /* Light Background Variations */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 120 25% 94%;
+    --muted-foreground: 150 10% 42%;
 
-    /* Amber - Call to Action */
-    --accent: 38 92% 50%;
-    --accent-foreground: 0 0% 100%;
+    /* LIET Highlight - Soft Sun Yellow */
+    --accent: 45 100% 71%;
+    --accent-foreground: 150 20% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 199 89% 48%;
+    --border: 120 20% 88%;
+    --input: 120 20% 88%;
+    --ring: 158 67% 32%;
 
     --radius: 0.75rem;
 
+    /* LIET Energy Theme Colors */
+    --liet-primary: 158 67% 32%;
+    --liet-accent: 74 69% 51%;
+    --liet-highlight: 45 100% 71%;
+    --liet-bg: 120 33% 97%;
+    --liet-muted: 150 10% 45%;
+
     /* Custom Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(199 89% 48%), hsl(199 89% 65%));
-    --gradient-eco: linear-gradient(135deg, hsl(158 64% 52%), hsl(158 64% 65%));
-    --gradient-cta: linear-gradient(135deg, hsl(38 92% 50%), hsl(38 92% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(158 67% 32%), hsl(158 67% 45%));
+    --gradient-eco: linear-gradient(135deg, hsl(74 69% 51%), hsl(74 69% 65%));
+    --gradient-cta: linear-gradient(135deg, hsl(45 100% 71%), hsl(45 100% 80%));
     
     /* Shadows */
-    --shadow-soft: 0 2px 20px -5px hsl(199 89% 48% / 0.15);
-    --shadow-card: 0 4px 25px -8px hsl(199 89% 48% / 0.2);
-    --shadow-glow: 0 0 30px hsl(199 89% 65% / 0.3);
+    --shadow-soft: 0 2px 20px -5px hsl(158 67% 32% / 0.15);
+    --shadow-card: 0 4px 25px -8px hsl(158 67% 32% / 0.2);
+    --shadow-glow: 0 0 30px hsl(158 67% 45% / 0.3);
     
     /* Trust Badge Colors */
-    --trust: 158 64% 52%;
-    --trust-foreground: 0 0% 100%;
+    --trust: 74 69% 51%;
+    --trust-foreground: 150 20% 15%;
   }
 }
 
