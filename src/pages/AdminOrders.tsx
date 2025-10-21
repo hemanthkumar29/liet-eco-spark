@@ -143,7 +143,18 @@ const AdminOrders = () => {
     const grouped: GroupedOrders = {};
     
     filtered.forEach((order) => {
-      const dateKey = format(parseISO(order.created_at), "yyyy-MM-dd");
+      // Group by date using Asia/Kolkata timezone
+      const utcDate = parseISO(order.created_at);
+      const kolkataDateStr = utcDate.toLocaleDateString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+      // Convert to yyyy-MM-dd format for consistency
+      const [day, month, year] = kolkataDateStr.split('/');
+      const dateKey = `${year}-${month}-${day}`;
+      
       if (!grouped[dateKey]) {
         grouped[dateKey] = [];
       }
@@ -159,10 +170,19 @@ const AdminOrders = () => {
 
     setGroupedOrders(grouped);
 
-    // Auto-expand today's orders
-    const today = format(new Date(), "yyyy-MM-dd");
-    if (grouped[today]) {
-      setExpandedDates(new Set([today]));
+    // Auto-expand today's orders (Asia/Kolkata timezone)
+    const now = new Date();
+    const todayKolkataStr = now.toLocaleDateString('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    const [day, month, year] = todayKolkataStr.split('/');
+    const todayKey = `${year}-${month}-${day}`;
+    
+    if (grouped[todayKey]) {
+      setExpandedDates(new Set([todayKey]));
     }
   };
 
@@ -360,7 +380,12 @@ const AdminOrders = () => {
                             <div>
                               <p className="text-xs text-muted-foreground">Time</p>
                               <p className="font-semibold">
-                                {format(parseISO(order.created_at), "hh:mm a")}
+                                {new Date(order.created_at).toLocaleTimeString('en-IN', {
+                                  timeZone: 'Asia/Kolkata',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  hour12: true,
+                                })} IST
                               </p>
                             </div>
                             <div>

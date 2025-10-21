@@ -36,24 +36,73 @@ const Checkout = () => {
       checkoutSchema.parse(formData);
       setIsSubmitting(true);
 
-      const orderId = `LIET-ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+      // Generate idempotency key for retry safety
+      const idempotencyKey = `${formData.student_roll}-${Date.now()}-${crypto.randomUUID()}`;
 
-      const { error } = await supabase.from("orders").insert([{
-        order_id: orderId,
-        ...formData,
-        products: items as any,
-        total_amount: getTotalAmount(),
-      }]);
+      const { data, error } = await supabase.functions.invoke('create-order', {
+        body: {
+          student_roll: formData.student_roll,
+          student_name: formData.student_name,
+          year: formData.year,
+          section: formData.section,
+          department: formData.department,
+          items: items.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            discount_price: item.discount_price,
+            quantity: item.quantity,
+          })),
+        },
+        headers: {
+          'x-idempotency-key': idempotencyKey,
+        },
+      });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Order error:', error);
+        
+        // Handle specific error codes
+        if (error.context?.code === 'OUT_OF_STOCK') {
+          toast.error(`Some items are no longer available. ${error.context.error}`, {
+            duration: 5000,
+          });
+          // Optionally update cart to reflect available stock
+          return;
+        }
+        
+        throw error;
+      }
+
+      if (!data?.order) {
+        throw new Error('No order data returned');
+      }
+
+      const orderId = data.order.order_id;
+      
+      // Show appropriate message based on price_pending
+      if (data.price_pending) {
+        toast.success('Order confirmed! Some prices are pending - admin will update you.', {
+          duration: 6000,
+        });
+      } else {
+        toast.success('Order placed successfully!');
+      }
 
       clearCart();
       navigate(`/order-confirmation/${orderId}`);
+      
     } catch (error) {
       if (error instanceof z.ZodError) {
         toast.error(error.errors[0].message);
       } else {
-        toast.error("Failed to place order");
+        console.error('Order submission error:', error);
+        toast.error("Failed to place order. Please try again.", {
+          action: {
+            label: 'Retry',
+            onClick: () => handleSubmit(e as any),
+          },
+        });
       }
     } finally {
       setIsSubmitting(false);

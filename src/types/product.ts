@@ -24,7 +24,11 @@ export interface Order {
   section: string;
   department: string;
   products: CartItem[];
-  total_amount: number;
+  total_amount: number | null;
   created_at: string;
   status?: string;
+  price_pending?: boolean;
+  notes?: string | null;
+  user_id?: string | null;
+  idempotency_key?: string | null;
 }

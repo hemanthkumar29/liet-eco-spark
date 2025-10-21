@@ -14,12 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      order_audit: {
+        Row: {
+          action: string
+          created_at: string
+          error_code: string | null
+          id: string
+          ip_address: string | null
+          order_id: string | null
+          payload: Json | null
+          user_agent: string | null
+          user_roll: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          error_code?: string | null
+          id?: string
+          ip_address?: string | null
+          order_id?: string | null
+          payload?: Json | null
+          user_agent?: string | null
+          user_roll?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          error_code?: string | null
+          id?: string
+          ip_address?: string | null
+          order_id?: string | null
+          payload?: Json | null
+          user_agent?: string | null
+          user_roll?: string | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           created_at: string | null
           department: string
           id: string
+          idempotency_key: string | null
+          notes: string | null
           order_id: string
+          price_pending: boolean
           products: Json
           section: string
           status: string
@@ -33,7 +72,10 @@ export type Database = {
           created_at?: string | null
           department: string
           id?: string
+          idempotency_key?: string | null
+          notes?: string | null
           order_id: string
+          price_pending?: boolean
           products: Json
           section: string
           status?: string
@@ -47,7 +89,10 @@ export type Database = {
           created_at?: string | null
           department?: string
           id?: string
+          idempotency_key?: string | null
+          notes?: string | null
           order_id?: string
+          price_pending?: boolean
           products?: Json
           section?: string
           status?: string
@@ -68,8 +113,10 @@ export type Database = {
           features: string[] | null
           id: string
           image_url: string | null
+          in_stock: boolean | null
           name: string
           price: number
+          quantity_available: number | null
           stock: number
         }
         Insert: {
@@ -80,8 +127,10 @@ export type Database = {
           features?: string[] | null
           id?: string
           image_url?: string | null
+          in_stock?: boolean | null
           name: string
           price: number
+          quantity_available?: number | null
           stock?: number
         }
         Update: {
@@ -92,8 +141,10 @@ export type Database = {
           features?: string[] | null
           id?: string
           image_url?: string | null
+          in_stock?: boolean | null
           name?: string
           price?: number
+          quantity_available?: number | null
           stock?: number
         }
         Relationships: []
