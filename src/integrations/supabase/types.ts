@@ -14,180 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
-      order_audit: {
-        Row: {
-          action: string
-          created_at: string
-          error_code: string | null
-          id: string
-          ip_address: string | null
-          order_id: string | null
-          payload: Json | null
-          user_agent: string | null
-          user_roll: string | null
-        }
-        Insert: {
-          action: string
-          created_at?: string
-          error_code?: string | null
-          id?: string
-          ip_address?: string | null
-          order_id?: string | null
-          payload?: Json | null
-          user_agent?: string | null
-          user_roll?: string | null
-        }
-        Update: {
-          action?: string
-          created_at?: string
-          error_code?: string | null
-          id?: string
-          ip_address?: string | null
-          order_id?: string | null
-          payload?: Json | null
-          user_agent?: string | null
-          user_roll?: string | null
-        }
-        Relationships: []
-      }
-      orders: {
-        Row: {
-          created_at: string | null
-          department: string
-          id: string
-          idempotency_key: string | null
-          notes: string | null
-          order_id: string
-          price_pending: boolean
-          products: Json
-          section: string
-          status: string
-          student_name: string
-          student_roll: string
-          total_amount: number
-          user_id: string | null
-          year: string
-        }
-        Insert: {
-          created_at?: string | null
-          department: string
-          id?: string
-          idempotency_key?: string | null
-          notes?: string | null
-          order_id: string
-          price_pending?: boolean
-          products: Json
-          section: string
-          status?: string
-          student_name: string
-          student_roll: string
-          total_amount: number
-          user_id?: string | null
-          year: string
-        }
-        Update: {
-          created_at?: string | null
-          department?: string
-          id?: string
-          idempotency_key?: string | null
-          notes?: string | null
-          order_id?: string
-          price_pending?: boolean
-          products?: Json
-          section?: string
-          status?: string
-          student_name?: string
-          student_roll?: string
-          total_amount?: number
-          user_id?: string | null
-          year?: string
-        }
-        Relationships: []
-      }
       products: {
         Row: {
           category: string
-          created_at: string | null
+          created_at: string
           description: string
-          discount_price: number | null
           features: string[] | null
           id: string
           image_url: string | null
           in_stock: boolean | null
+          liet_price: number | null
           name: string
           price: number
-          quantity_available: number | null
+          quantity_available: number
           stock: number
+          updated_at: string
         }
         Insert: {
           category: string
-          created_at?: string | null
+          created_at?: string
           description: string
-          discount_price?: number | null
           features?: string[] | null
           id?: string
           image_url?: string | null
           in_stock?: boolean | null
+          liet_price?: number | null
           name: string
           price: number
-          quantity_available?: number | null
+          quantity_available?: number
           stock?: number
+          updated_at?: string
         }
         Update: {
           category?: string
-          created_at?: string | null
+          created_at?: string
           description?: string
-          discount_price?: number | null
           features?: string[] | null
           id?: string
           image_url?: string | null
           in_stock?: boolean | null
+          liet_price?: number | null
           name?: string
           price?: number
-          quantity_available?: number | null
+          quantity_available?: number
           stock?: number
-        }
-        Relationships: []
-      }
-      profiles: {
-        Row: {
-          created_at: string | null
-          full_name: string | null
-          id: string
-          phone_number: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          full_name?: string | null
-          id: string
-          phone_number: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          full_name?: string | null
-          id?: string
-          phone_number?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -196,16 +67,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -332,8 +197,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "user"],
-    },
+    Enums: {},
   },
 } as const
