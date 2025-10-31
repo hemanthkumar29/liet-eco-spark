@@ -9,6 +9,7 @@ import { Product } from "@/types/product";
 import { Leaf, Zap, Shield, Search, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroBanner from "@/assets/hero-banner.jpg";
+import lietLogo from "@/assets/liet-logo.jpg";
 
 const Index = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -65,8 +66,12 @@ const Index = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Zap className="h-8 w-8 text-primary" />
+          <div className="flex items-center gap-3">
+            <img 
+              src={lietLogo} 
+              alt="LIET LED Manufacturing Logo" 
+              className="h-12 w-12 object-contain"
+            />
             <div>
               <h1 className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
                 LIET Eco-Spark
@@ -194,10 +199,17 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-8 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="text-sm opacity-90">
-            © 2025 LIET Eco-Spark Initiative. Made with 💚 by LIET students for a sustainable future.
-          </p>
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col items-center gap-4">
+            <img 
+              src={lietLogo} 
+              alt="LIET LED Manufacturing Logo" 
+              className="h-16 w-16 object-contain bg-white/10 rounded-lg p-2"
+            />
+            <p className="text-sm opacity-90 text-center">
+              © 2025 LIET Eco-Spark Initiative. Made with 💚 by LIET students for a sustainable future.
+            </p>
+          </div>
         </div>
       </footer>
     </div>
