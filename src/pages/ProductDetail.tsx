@@ -45,8 +45,9 @@ const ProductDetail = () => {
   if (!product) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   const imageUrl = productImages[product.name] || bulb9w;
-  const discountPercent = product.discount_price
-    ? Math.round(((product.price - product.discount_price) / product.price) * 100)
+  const lietPrice = product.liet_price || product.discount_price;
+  const discountPercent = lietPrice
+    ? Math.round(((product.price - lietPrice) / product.price) * 100)
     : 0;
 
   return (
@@ -72,14 +73,20 @@ const ProductDetail = () => {
             </div>
 
             <div className="flex items-baseline gap-3">
-              {product.discount_price ? (
+              {lietPrice ? (
                 <>
-                  <span className="text-4xl font-bold text-accent">₹{product.discount_price}</span>
-                  <span className="text-xl text-muted-foreground line-through">₹{product.price}</span>
-                  <Badge className="bg-accent text-accent-foreground">{discountPercent}% OFF</Badge>
+                  <span className="text-4xl font-bold text-accent">₹{lietPrice}</span>
+                  {discountPercent > 0 && (
+                    <>
+                      <span className="text-xl text-muted-foreground line-through">₹{product.price}</span>
+                      <Badge className="bg-accent text-accent-foreground">{discountPercent}% OFF</Badge>
+                    </>
+                  )}
                 </>
-              ) : (
+              ) : product.price > 0 ? (
                 <span className="text-4xl font-bold">₹{product.price}</span>
+              ) : (
+                <span className="text-2xl font-semibold text-muted-foreground">Price TBD - Contact for pricing</span>
               )}
             </div>
 

@@ -3,12 +3,13 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  discount_price: number | null;
+  liet_price: number | null;
   stock: number;
   category: string;
   image_url: string | null;
   features: string[] | null;
   created_at: string;
+  discount_price?: number | null;
 }
 
 export interface CartItem extends Product {
