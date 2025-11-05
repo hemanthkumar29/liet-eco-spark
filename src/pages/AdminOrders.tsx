@@ -48,7 +48,7 @@ const AdminOrders = () => {
       setUser(session.user);
 
       // Check if user has admin role
-      const { data: roleData } = await supabase
+      const { data: roleData } = await (supabase as any)
         .from("user_roles")
         .select("role")
         .eq("user_id", session.user.id)
@@ -106,19 +106,13 @@ const AdminOrders = () => {
   };
 
   const fetchOrders = async () => {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from("orders")
       .select("*")
       .order("created_at", { ascending: false });
     
     if (data) {
-      setOrders(
-        data.map((order) => ({
-          ...order,
-          created_at: order.created_at || "",
-          products: order.products as any,
-        }))
-      );
+      setOrders(data as Order[]);
     }
   };
 
@@ -199,7 +193,7 @@ const AdminOrders = () => {
   };
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from("orders")
       .update({ status: newStatus })
       .eq("id", orderId);

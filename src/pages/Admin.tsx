@@ -28,13 +28,9 @@ const Admin = () => {
   }, []);
 
   const fetchOrders = async () => {
-    const { data } = await supabase.from("orders").select("*").order("created_at", { ascending: false });
+    const { data } = await (supabase as any).from("orders").select("*").order("created_at", { ascending: false });
     if (data) {
-      setOrders(data.map(order => ({
-        ...order,
-        created_at: order.created_at || '',
-        products: order.products as any
-      })));
+      setOrders(data as Order[]);
     }
   };
 
