@@ -15,12 +15,10 @@ import tube18w from "@/assets/tube-18w.jpg";
 import bulbSmart from "@/assets/bulb-smart.jpg";
 
 const productImages: Record<string, string> = {
-  "9W LED Bulb": bulb9w,
-  "12W LED Bulb": bulb12w,
-  "15W LED Bulb": bulb15w,
-  "7W Night Bulb": bulb7w,
-  "18W Tube Light": tube18w,
-  "Smart 10W Bulb": bulbSmart,
+  "Ceiling Light": bulb15w,
+  "Tube Light": tube18w,
+  "Inverter Bulb": bulb12w,
+  "Normal Bulb": bulb9w,
 };
 
 const ProductDetail = () => {
