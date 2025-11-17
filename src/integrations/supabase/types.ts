@@ -14,7 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      orders: {
+        Row: {
+          created_at: string
+          department: string
+          id: string
+          idempotency_key: string | null
+          notes: string | null
+          order_id: string
+          price_pending: boolean | null
+          products: Json
+          section: string
+          status: string
+          student_name: string
+          student_roll: string
+          total_amount: number | null
+          updated_at: string
+          user_id: string | null
+          year: string
+        }
+        Insert: {
+          created_at?: string
+          department: string
+          id?: string
+          idempotency_key?: string | null
+          notes?: string | null
+          order_id: string
+          price_pending?: boolean | null
+          products: Json
+          section: string
+          status?: string
+          student_name: string
+          student_roll: string
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string | null
+          year: string
+        }
+        Update: {
+          created_at?: string
+          department?: string
+          id?: string
+          idempotency_key?: string | null
+          notes?: string | null
+          order_id?: string
+          price_pending?: boolean | null
+          products?: Json
+          section?: string
+          status?: string
+          student_name?: string
+          student_roll?: string
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string | null
+          year?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          discount_price: number | null
+          features: string[] | null
+          id: string
+          image_url: string | null
+          liet_price: number | null
+          name: string
+          price: number
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          discount_price?: number | null
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          liet_price?: number | null
+          name: string
+          price?: number
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          discount_price?: number | null
+          features?: string[] | null
+          id?: string
+          image_url?: string | null
+          liet_price?: number | null
+          name?: string
+          price?: number
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
