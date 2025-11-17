@@ -15,11 +15,10 @@ interface OrderItem {
 }
 
 interface OrderRequest {
-  student_roll: string;
-  student_name: string;
-  year: string;
-  section: string;
-  department: string;
+  customer_name: string;
+  address: string;
+  mobile_number: string;
+  whatsapp_number: string;
   items: OrderItem[];
 }
 
@@ -83,9 +82,9 @@ Deno.serve(async (req) => {
     const orderData: OrderRequest = await req.json();
 
     // Validate input
-    if (!orderData.student_roll || !orderData.student_name || !orderData.year || 
-        !orderData.section || !orderData.department || !orderData.items || orderData.items.length === 0) {
-      await logAudit(supabase, 'failed', null, orderData.student_roll, orderData, 'VALIDATION_ERROR', req);
+    if (!orderData.customer_name || !orderData.address || !orderData.mobile_number || 
+        !orderData.whatsapp_number || !orderData.items || orderData.items.length === 0) {
+      await logAudit(supabase, 'failed', null, orderData.customer_name, orderData, 'VALIDATION_ERROR', req);
       return new Response(
         JSON.stringify({ error: 'Missing required fields', code: 'VALIDATION_ERROR' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -125,7 +124,7 @@ Deno.serve(async (req) => {
         .single();
 
       if (productError || !product) {
-        await logAudit(supabase, 'failed', null, orderData.student_roll, orderData, 'PRODUCT_NOT_FOUND', req);
+        await logAudit(supabase, 'failed', null, orderData.customer_name, orderData, 'PRODUCT_NOT_FOUND', req);
         return new Response(
           JSON.stringify({ error: `Product not found: ${item.name}`, code: 'PRODUCT_NOT_FOUND', itemId: item.id }),
           { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -134,7 +133,7 @@ Deno.serve(async (req) => {
 
       // Check stock availability
       if (!product.in_stock || product.quantity_available < item.quantity) {
-        await logAudit(supabase, 'failed', null, orderData.student_roll, orderData, 'OUT_OF_STOCK', req);
+        await logAudit(supabase, 'failed', null, orderData.customer_name, orderData, 'OUT_OF_STOCK', req);
         return new Response(
           JSON.stringify({
             error: `Insufficient stock for ${product.name}`,
@@ -171,7 +170,7 @@ Deno.serve(async (req) => {
 
       if (updateError) {
         console.error('Failed to update stock:', updateError);
-        await logAudit(supabase, 'failed', null, orderData.student_roll, orderData, 'STOCK_UPDATE_ERROR', req);
+        await logAudit(supabase, 'failed', null, orderData.customer_name, orderData, 'STOCK_UPDATE_ERROR', req);
         return new Response(
           JSON.stringify({ error: 'Failed to reserve stock', code: 'STOCK_UPDATE_ERROR' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -198,7 +197,7 @@ Deno.serve(async (req) => {
       
       attempts++;
       if (attempts >= maxAttempts) {
-        await logAudit(supabase, 'failed', null, orderData.student_roll, orderData, 'ORDER_ID_COLLISION', req);
+        await logAudit(supabase, 'failed', null, orderData.customer_name, orderData, 'ORDER_ID_COLLISION', req);
         return new Response(
           JSON.stringify({ error: 'Failed to generate unique order ID', code: 'ORDER_ID_COLLISION' }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -226,11 +225,10 @@ Deno.serve(async (req) => {
       .from('orders')
       .insert({
         order_id: orderId,
-        student_roll: orderData.student_roll,
-        student_name: orderData.student_name,
-        year: orderData.year,
-        section: orderData.section,
-        department: orderData.department,
+        customer_name: orderData.customer_name,
+        address: orderData.address,
+        mobile_number: orderData.mobile_number,
+        whatsapp_number: orderData.whatsapp_number,
         products: validatedItems,
         total_amount: hasPendingPrice ? null : totalAmount,
         price_pending: hasPendingPrice,
@@ -244,7 +242,7 @@ Deno.serve(async (req) => {
 
     if (insertError) {
       console.error('Order insertion error:', insertError);
-      await logAudit(supabase, 'failed', orderId, orderData.student_roll, orderData, 'INSERT_ERROR', req);
+      await logAudit(supabase, 'failed', orderId, orderData.customer_name, orderData, 'INSERT_ERROR', req);
       
       return new Response(
         JSON.stringify({ error: 'Failed to create order', code: 'INSERT_ERROR', details: insertError.message }),
@@ -253,7 +251,7 @@ Deno.serve(async (req) => {
     }
 
     // Log successful order creation
-    await logAudit(supabase, 'created', orderId, orderData.student_roll, orderData, null, req);
+    await logAudit(supabase, 'created', orderId, orderData.customer_name, orderData, null, req);
 
     console.log('Order created successfully:', orderId);
 

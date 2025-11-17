@@ -16,58 +16,55 @@ export type Database = {
     Tables: {
       orders: {
         Row: {
+          address: string
           created_at: string
-          department: string
+          customer_name: string
           id: string
           idempotency_key: string | null
+          mobile_number: string
           notes: string | null
           order_id: string
           price_pending: boolean | null
           products: Json
-          section: string
           status: string
-          student_name: string
-          student_roll: string
           total_amount: number | null
           updated_at: string
           user_id: string | null
-          year: string
+          whatsapp_number: string
         }
         Insert: {
+          address?: string
           created_at?: string
-          department: string
+          customer_name?: string
           id?: string
           idempotency_key?: string | null
+          mobile_number?: string
           notes?: string | null
           order_id: string
           price_pending?: boolean | null
           products: Json
-          section: string
           status?: string
-          student_name: string
-          student_roll: string
           total_amount?: number | null
           updated_at?: string
           user_id?: string | null
-          year: string
+          whatsapp_number?: string
         }
         Update: {
+          address?: string
           created_at?: string
-          department?: string
+          customer_name?: string
           id?: string
           idempotency_key?: string | null
+          mobile_number?: string
           notes?: string | null
           order_id?: string
           price_pending?: boolean | null
           products?: Json
-          section?: string
           status?: string
-          student_name?: string
-          student_roll?: string
           total_amount?: number | null
           updated_at?: string
           user_id?: string | null
-          year?: string
+          whatsapp_number?: string
         }
         Relationships: []
       }
@@ -80,9 +77,11 @@ export type Database = {
           features: string[] | null
           id: string
           image_url: string | null
+          in_stock: boolean | null
           liet_price: number | null
           name: string
           price: number
+          quantity_available: number | null
           stock: number
           updated_at: string
         }
@@ -94,9 +93,11 @@ export type Database = {
           features?: string[] | null
           id?: string
           image_url?: string | null
+          in_stock?: boolean | null
           liet_price?: number | null
           name: string
           price?: number
+          quantity_available?: number | null
           stock?: number
           updated_at?: string
         }
@@ -108,9 +109,11 @@ export type Database = {
           features?: string[] | null
           id?: string
           image_url?: string | null
+          in_stock?: boolean | null
           liet_price?: number | null
           name?: string
           price?: number
+          quantity_available?: number | null
           stock?: number
           updated_at?: string
         }

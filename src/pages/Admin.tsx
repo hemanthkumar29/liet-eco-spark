@@ -91,12 +91,12 @@ const Admin = () => {
                   <p className="font-mono font-bold">{order.order_id}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Student</p>
-                  <p className="font-semibold">{order.student_name}</p>
+                  <p className="text-sm text-muted-foreground">Customer</p>
+                  <p className="font-semibold">{order.customer_name}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Department</p>
-                  <p>{order.department}</p>
+                  <p className="text-sm text-muted-foreground">Mobile</p>
+                  <p>{order.mobile_number}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total</p>
