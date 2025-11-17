@@ -19,11 +19,10 @@ export interface CartItem extends Product {
 export interface Order {
   id: string;
   order_id: string;
-  student_roll: string;
-  student_name: string;
-  year: string;
-  section: string;
-  department: string;
+  customer_name: string;
+  address: string;
+  mobile_number: string;
+  whatsapp_number: string;
   products: CartItem[];
   total_amount: number | null;
   created_at: string;

@@ -81,7 +81,7 @@ const AdminOrders = () => {
         (payload) => {
           const newOrder = payload.new as Order;
           setOrders((prev) => [newOrder, ...prev]);
-          toast.success(`New order from ${newOrder.student_roll}`);
+          toast.success(`New order from ${newOrder.customer_name}`);
         }
       )
       .on(
@@ -123,8 +123,8 @@ const AdminOrders = () => {
     if (searchTerm) {
       filtered = filtered.filter(
         (order) =>
-          order.student_roll.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.student_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.mobile_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
           order.order_id.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -213,16 +213,15 @@ const AdminOrders = () => {
     }
 
     const csv = [
-      ["Order ID", "Date", "Time", "Roll No", "Student Name", "Year", "Section", "Department", "Total", "Status"],
+      ["Order ID", "Date", "Time", "Customer Name", "Address", "Mobile", "WhatsApp", "Total", "Status"],
       ...dataToExport.map((order) => [
         order.order_id,
         format(parseISO(order.created_at), "MMM dd, yyyy"),
         format(parseISO(order.created_at), "hh:mm a"),
-        order.student_roll,
-        order.student_name,
-        order.year,
-        order.section,
-        order.department,
+        order.customer_name,
+        order.address,
+        order.mobile_number,
+        order.whatsapp_number,
         order.total_amount,
         order.status || "Pending",
       ]),
@@ -387,15 +386,15 @@ const AdminOrders = () => {
                               <p className="font-mono text-sm font-bold">{order.order_id}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-muted-foreground">Student</p>
-                              <p className="font-semibold">{order.student_name}</p>
-                              <p className="text-xs text-muted-foreground">{order.student_roll}</p>
+                              <p className="text-xs text-muted-foreground">Customer</p>
+                              <p className="font-semibold">{order.customer_name}</p>
+                              <p className="text-xs text-muted-foreground">{order.mobile_number}</p>
                             </div>
                             <div>
-                              <p className="text-xs text-muted-foreground">Department</p>
-                              <p>{order.department}</p>
+                              <p className="text-xs text-muted-foreground">Address</p>
+                              <p>{order.address}</p>
                               <p className="text-xs text-muted-foreground">
-                                {order.year} - {order.section}
+                                WhatsApp: {order.whatsapp_number}
                               </p>
                             </div>
                             <div className="flex items-center justify-between">

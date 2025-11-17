@@ -10,22 +10,20 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 const checkoutSchema = z.object({
-  student_roll: z.string().min(1, "Roll number is required").max(20),
-  student_name: z.string().min(1, "Name is required").max(100),
-  year: z.string().min(1, "Year is required"),
-  section: z.string().min(1, "Section is required"),
-  department: z.string().min(1, "Department is required"),
+  customer_name: z.string().min(1, "Name is required").max(100),
+  address: z.string().min(1, "Address is required").max(500),
+  mobile_number: z.string().min(10, "Valid mobile number is required").max(15),
+  whatsapp_number: z.string().min(10, "Valid WhatsApp number is required").max(15),
 });
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, getTotalAmount, clearCart } = useCartStore();
   const [formData, setFormData] = useState({
-    student_roll: "",
-    student_name: "",
-    year: "",
-    section: "",
-    department: "",
+    customer_name: "",
+    address: "",
+    mobile_number: "",
+    whatsapp_number: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,15 +35,14 @@ const Checkout = () => {
       setIsSubmitting(true);
 
       // Generate idempotency key for retry safety
-      const idempotencyKey = `${formData.student_roll}-${Date.now()}-${crypto.randomUUID()}`;
+      const idempotencyKey = `${formData.mobile_number}-${Date.now()}-${crypto.randomUUID()}`;
 
       const { data, error } = await supabase.functions.invoke('create-order', {
         body: {
-          student_roll: formData.student_roll,
-          student_name: formData.student_name,
-          year: formData.year,
-          section: formData.section,
-          department: formData.department,
+          customer_name: formData.customer_name,
+          address: formData.address,
+          mobile_number: formData.mobile_number,
+          whatsapp_number: formData.whatsapp_number,
           items: items.map(item => ({
             id: item.id,
             name: item.name,
@@ -126,53 +123,47 @@ const Checkout = () => {
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
         <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg shadow-card">
           <div>
-            <Label htmlFor="student_roll">Roll Number *</Label>
+            <Label htmlFor="customer_name">Full Name *</Label>
             <Input
-              id="student_roll"
-              value={formData.student_roll}
-              onChange={(e) => setFormData({ ...formData, student_roll: e.target.value })}
+              id="customer_name"
+              value={formData.customer_name}
+              onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
               required
+              placeholder="Enter your full name"
             />
           </div>
           <div>
-            <Label htmlFor="student_name">Full Name *</Label>
+            <Label htmlFor="address">Address *</Label>
             <Input
-              id="student_name"
-              value={formData.student_name}
-              onChange={(e) => setFormData({ ...formData, student_name: e.target.value })}
+              id="address"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
               required
+              placeholder="Enter your complete address"
             />
           </div>
           <div>
-            <Label htmlFor="year">Year *</Label>
-            <Select value={formData.year} onValueChange={(value) => setFormData({ ...formData, year: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select year" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1st Year">1st Year</SelectItem>
-                <SelectItem value="2nd Year">2nd Year</SelectItem>
-                <SelectItem value="3rd Year">3rd Year</SelectItem>
-                <SelectItem value="4th Year">4th Year</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="section">Section *</Label>
+            <Label htmlFor="mobile_number">Mobile Number *</Label>
             <Input
-              id="section"
-              value={formData.section}
-              onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+              id="mobile_number"
+              type="tel"
+              value={formData.mobile_number}
+              onChange={(e) => setFormData({ ...formData, mobile_number: e.target.value })}
               required
+              placeholder="Enter 10-digit mobile number"
+              pattern="[0-9]{10,15}"
             />
           </div>
           <div>
-            <Label htmlFor="department">Department *</Label>
+            <Label htmlFor="whatsapp_number">WhatsApp Number *</Label>
             <Input
-              id="department"
-              value={formData.department}
-              onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+              id="whatsapp_number"
+              type="tel"
+              value={formData.whatsapp_number}
+              onChange={(e) => setFormData({ ...formData, whatsapp_number: e.target.value })}
               required
+              placeholder="Enter WhatsApp Number"
+              pattern="[0-9]{10,15}"
             />
           </div>
           <div className="pt-4 border-t">
