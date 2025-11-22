@@ -19,6 +19,10 @@ interface OrderRequest {
   address: string;
   mobile_number: string;
   whatsapp_number: string;
+  student_roll: string;
+  department: string;
+  year: string;
+  section: string;
   items: OrderItem[];
 }
 
@@ -83,7 +87,8 @@ Deno.serve(async (req) => {
 
     // Validate input
     if (!orderData.customer_name || !orderData.address || !orderData.mobile_number || 
-        !orderData.whatsapp_number || !orderData.items || orderData.items.length === 0) {
+        !orderData.whatsapp_number || !orderData.student_roll || !orderData.department ||
+        !orderData.year || !orderData.section || !orderData.items || orderData.items.length === 0) {
       await logAudit(supabase, 'failed', null, orderData.customer_name, orderData, 'VALIDATION_ERROR', req);
       return new Response(
         JSON.stringify({ error: 'Missing required fields', code: 'VALIDATION_ERROR' }),
@@ -229,6 +234,10 @@ Deno.serve(async (req) => {
         address: orderData.address,
         mobile_number: orderData.mobile_number,
         whatsapp_number: orderData.whatsapp_number,
+        student_roll: orderData.student_roll,
+        department: orderData.department,
+        year: orderData.year,
+        section: orderData.section,
         products: validatedItems,
         total_amount: hasPendingPrice ? null : totalAmount,
         price_pending: hasPendingPrice,

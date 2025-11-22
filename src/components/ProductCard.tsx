@@ -27,9 +27,9 @@ interface ProductCardProps {
 export const ProductCard = ({ product }: ProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
   const navigate = useNavigate();
-  const lietPrice = product.liet_price || product.discount_price;
-  const discountPercent = lietPrice
-    ? Math.round(((product.price - lietPrice) / product.price) * 100)
+  const displayPrice = product.discount_price || product.price;
+  const discountPercent = product.discount_price
+    ? Math.round(((product.price - product.discount_price) / product.price) * 100)
     : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -83,10 +83,10 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-baseline gap-2">
-            {lietPrice ? (
+            {product.discount_price ? (
               <>
                 <span className="text-2xl font-bold text-accent">
-                  ₹{lietPrice}
+                  ₹{product.discount_price}
                 </span>
                 {discountPercent > 0 && (
                   <span className="text-sm text-muted-foreground line-through">

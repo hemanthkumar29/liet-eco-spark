@@ -125,7 +125,9 @@ const AdminOrders = () => {
         (order) =>
           order.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           order.mobile_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          order.order_id.toLowerCase().includes(searchTerm.toLowerCase())
+          order.order_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.student_roll.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          order.department.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -213,12 +215,16 @@ const AdminOrders = () => {
     }
 
     const csv = [
-      ["Order ID", "Date", "Time", "Customer Name", "Address", "Mobile", "WhatsApp", "Total", "Status"],
+      ["Order ID", "Date", "Time", "Customer Name", "Roll Number", "Department", "Year", "Section", "Address", "Mobile", "WhatsApp", "Total", "Status"],
       ...dataToExport.map((order) => [
         order.order_id,
         format(parseISO(order.created_at), "MMM dd, yyyy"),
         format(parseISO(order.created_at), "hh:mm a"),
         order.customer_name,
+        order.student_roll,
+        order.department,
+        order.year,
+        order.section,
         order.address,
         order.mobile_number,
         order.whatsapp_number,
@@ -389,6 +395,11 @@ const AdminOrders = () => {
                               <p className="text-xs text-muted-foreground">Customer</p>
                               <p className="font-semibold">{order.customer_name}</p>
                               <p className="text-xs text-muted-foreground">{order.mobile_number}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-muted-foreground">Roll / Dept</p>
+                              <p className="font-medium text-sm">{order.student_roll}</p>
+                              <p className="text-xs text-muted-foreground">{order.department} - {order.year} {order.section}</p>
                             </div>
                             <div>
                               <p className="text-xs text-muted-foreground">Address</p>
