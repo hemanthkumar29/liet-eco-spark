@@ -3,7 +3,6 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  liet_price: number | null;
   stock: number;
   category: string;
   image_url: string | null;
@@ -23,6 +22,10 @@ export interface Order {
   address: string;
   mobile_number: string;
   whatsapp_number: string;
+  student_roll: string;
+  department: string;
+  year: string;
+  section: string;
   products: CartItem[];
   total_amount: number | null;
   created_at: string;

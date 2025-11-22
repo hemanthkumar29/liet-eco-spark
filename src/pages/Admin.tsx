@@ -93,10 +93,12 @@ const Admin = () => {
                 <div>
                   <p className="text-sm text-muted-foreground">Customer</p>
                   <p className="font-semibold">{order.customer_name}</p>
+                  <p className="text-sm">{order.mobile_number}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">Mobile</p>
-                  <p>{order.mobile_number}</p>
+                  <p className="text-sm text-muted-foreground">Roll / Dept</p>
+                  <p className="font-medium">{order.student_roll}</p>
+                  <p className="text-sm">{order.department} - {order.year} {order.section}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total</p>

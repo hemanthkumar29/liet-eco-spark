@@ -14,6 +14,10 @@ const checkoutSchema = z.object({
   address: z.string().min(1, "Address is required").max(500),
   mobile_number: z.string().min(10, "Valid mobile number is required").max(15),
   whatsapp_number: z.string().min(10, "Valid WhatsApp number is required").max(15),
+  student_roll: z.string().min(1, "Roll number is required").max(50),
+  department: z.string().min(1, "Department is required").max(100),
+  year: z.string().min(1, "Year of study is required").max(20),
+  section: z.string().min(1, "Section is required").max(10),
 });
 
 const Checkout = () => {
@@ -24,6 +28,10 @@ const Checkout = () => {
     address: "",
     mobile_number: "",
     whatsapp_number: "",
+    student_roll: "",
+    department: "",
+    year: "",
+    section: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -43,6 +51,10 @@ const Checkout = () => {
           address: formData.address,
           mobile_number: formData.mobile_number,
           whatsapp_number: formData.whatsapp_number,
+          student_roll: formData.student_roll,
+          department: formData.department,
+          year: formData.year,
+          section: formData.section,
           items: items.map(item => ({
             id: item.id,
             name: item.name,
@@ -87,7 +99,9 @@ const Checkout = () => {
       }
 
       clearCart();
-      navigate(`/order-confirmation/${orderId}`);
+      navigate(`/order-confirmation/${orderId}`, { 
+        state: { orderData: data.order }
+      });
       
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -164,6 +178,46 @@ const Checkout = () => {
               required
               placeholder="Enter WhatsApp Number"
               pattern="[0-9]{10,15}"
+            />
+          </div>
+          <div>
+            <Label htmlFor="student_roll">Roll Number *</Label>
+            <Input
+              id="student_roll"
+              value={formData.student_roll}
+              onChange={(e) => setFormData({ ...formData, student_roll: e.target.value })}
+              required
+              placeholder="Enter Roll Number"
+            />
+          </div>
+          <div>
+            <Label htmlFor="department">Department *</Label>
+            <Input
+              id="department"
+              value={formData.department}
+              onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+              required
+              placeholder="Enter Department (e.g., CSE, ECE, ME)"
+            />
+          </div>
+          <div>
+            <Label htmlFor="year">Year of Study *</Label>
+            <Input
+              id="year"
+              value={formData.year}
+              onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+              required
+              placeholder="Enter Year (e.g., 1st, 2nd, 3rd, 4th)"
+            />
+          </div>
+          <div>
+            <Label htmlFor="section">Section *</Label>
+            <Input
+              id="section"
+              value={formData.section}
+              onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+              required
+              placeholder="Enter Section (e.g., A, B, C)"
             />
           </div>
           <div className="pt-4 border-t">
