@@ -7,16 +7,14 @@ import { useCartStore } from "@/lib/cartStore";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import bulb9w from "@/assets/bulb-9w.jpg";
-import bulb12w from "@/assets/bulb-12w.jpg";
 import bulb15w from "@/assets/bulb-15w.jpg";
-import bulb7w from "@/assets/bulb-7w.jpg";
 import tube18w from "@/assets/tube-18w.jpg";
-import bulbSmart from "@/assets/bulb-smart.jpg";
+import inverterBulb from "@/assets/inverter-bulb.jpg";
 
 const productImages: Record<string, string> = {
   "Ceiling Light": bulb15w,
   "Tube Light": tube18w,
-  "Inverter Bulb": bulb12w,
+  "Inverter Bulb": inverterBulb,
   "Normal Bulb": bulb9w,
 };
 
