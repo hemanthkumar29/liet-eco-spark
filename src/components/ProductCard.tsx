@@ -6,17 +6,7 @@ import { Product } from "@/types/product";
 import { useCartStore } from "@/lib/cartStore";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import bulb9w from "@/assets/normal_bulb.jpg";
-import bulb15w from "@/assets/bulb-15w.jpg";
-import tube18w from "@/assets/tube-18w.jpg";
-import inverterBulb from "@/assets/inverter-bulb.jpg";
-
-const productImages: Record<string, string> = {
-  "Ceiling Light": bulb15w,
-  "Tube Light": tube18w,
-  "Inverter Bulb": inverterBulb,
-  "Normal Bulb": bulb9w,
-};
+import { getProductImage } from "@/lib/productImages";
 
 interface ProductCardProps {
   product: Product;
@@ -40,7 +30,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
     }
   };
 
-  const imageUrl = productImages[product.name] || bulb9w;
+  // Use centralized image resolver
+  const imageUrl = getProductImage(product.name, product.category, product.image_url);
 
   return (
     <Card

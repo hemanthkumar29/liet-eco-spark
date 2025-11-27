@@ -7,17 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/product";
 import { useCartStore } from "@/lib/cartStore";
 import { toast } from "sonner";
-import bulb9w from "@/assets/normal_bulb.jpg";
-import bulb15w from "@/assets/bulb-15w.jpg";
-import tube18w from "@/assets/tube-18w.jpg";
-import inverterBulb from "@/assets/inverter-bulb.jpg";
-
-const productImages: Record<string, string> = {
-  "Ceiling Light": bulb15w,
-  "Tube Light": tube18w,
-  "Inverter Bulb": inverterBulb,
-  "Normal Bulb": bulb9w,
-};
+import { getProductImage } from "@/lib/productImages";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -40,7 +30,8 @@ const ProductDetail = () => {
 
   if (!product) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
-  const imageUrl = productImages[product.name] || bulb9w;
+  // Use centralized image resolver
+  const imageUrl = getProductImage(product.name, product.category, product.image_url);
   const displayPrice = product.discount_price || product.price;
   const discountPercent = product.discount_price
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
