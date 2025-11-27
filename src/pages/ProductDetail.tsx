@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/product";
 import { useCartStore } from "@/lib/cartStore";
 import { toast } from "sonner";
-import bulb9w from "@/assets/bulb-9w.jpg";
+import bulb9w from "@/assets/normal_bulb.jpg";
 import bulb15w from "@/assets/bulb-15w.jpg";
 import tube18w from "@/assets/tube-18w.jpg";
 import inverterBulb from "@/assets/inverter-bulb.jpg";
