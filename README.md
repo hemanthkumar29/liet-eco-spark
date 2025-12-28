@@ -50,7 +50,7 @@ Host the static `dist/` with the Express server (already configured to serve it 
 ### Production hosting (Netlify/static)
 
 - Netlify only serves the static frontend. You still need the Node API running somewhere reachable over HTTPS (Render/Railway/Fly/any VPS). Deploy `npm run server` there with the `data/` folder.
-- Set `VITE_API_BASE_URL` in Netlify environment variables to your deployed API base (e.g., `https://your-api-host.com`). If your API base already ends with `/api`, the client will de-duplicate to avoid calling `/api/api/orders`. Without this, `/api/orders` will 404 and checkout will fail.
+- Set `VITE_API_BASE_URL` in Netlify environment variables to your deployed API base (e.g., `https://your-api-host.com`). If  your API base already ends with `/api`, the client will de-duplicate to avoid calling `/api/api/orders`. Without this, `/api/orders` will 404 and checkout will fail.
 - The API already enables CORS for all origins; if you lock it down, include your Netlify domain.
 - Optional: add a CDN/edge rewrite from `/api/*` to your API host if you want to keep relative paths in the browser.
 
