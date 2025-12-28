@@ -45,6 +45,9 @@ export const CartDrawer = () => {
                       <p className="text-sm text-muted-foreground">
                         ₹{item.discount_price || item.price} each
                       </p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.quantity_available ?? item.stock ?? "∞"} available
+                      </p>
                       <div className="flex items-center gap-2 mt-2">
                         <Button
                           size="sm"
@@ -58,7 +61,7 @@ export const CartDrawer = () => {
                           size="sm"
                           variant="outline"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          disabled={item.quantity >= item.stock}
+                          disabled={(item.quantity_available ?? item.stock ?? Infinity) <= item.quantity}
                         >
                           <Plus className="h-3 w-3" />
                         </Button>

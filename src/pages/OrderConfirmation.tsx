@@ -3,8 +3,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import confetti from "canvas-confetti";
-import { supabase } from "@/integrations/supabase/client";
 import type { Order } from "@/types/product";
+import { fetchOrderById } from "@/lib/api";
 
 const OrderConfirmation = () => {
   const { orderId } = useParams();
@@ -17,13 +17,10 @@ const OrderConfirmation = () => {
     
     // If order details weren't passed, fetch them
     if (!orderDetails && orderId) {
-      supabase
-        .from('orders')
-        .select('*')
-        .eq('order_id', orderId)
-        .single()
-        .then(({ data }) => {
-          if (data) setOrderDetails(data as any);
+      fetchOrderById(orderId)
+        .then((order) => setOrderDetails(order))
+        .catch((error) => {
+          console.error("Failed to fetch order", error);
         });
     }
   }, [orderId, orderDetails]);

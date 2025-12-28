@@ -3,11 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, ArrowLeft, Check } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/product";
 import { useCartStore } from "@/lib/cartStore";
 import { toast } from "sonner";
 import { getProductImage } from "@/lib/productImages";
+import { fetchProductById } from "@/lib/api";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -20,18 +20,22 @@ const ProductDetail = () => {
   }, [id]);
 
   const fetchProduct = async () => {
-    const { data } = await supabase
-      .from("products")
-      .select("*")
-      .eq("id", id)
-      .single();
-    setProduct(data);
+    if (!id) return;
+    try {
+      const data = await fetchProductById(id);
+      setProduct(data);
+    } catch (error) {
+      console.error("Failed to load product", error);
+      toast.error("Product not found");
+      navigate("/");
+    }
   };
 
   if (!product) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   // Use centralized image resolver
   const imageUrl = getProductImage(product.name, product.category, product.image_url);
+  const availableUnits = product.quantity_available ?? product.stock ?? 0;
   const displayPrice = product.discount_price || product.price;
   const discountPercent = product.discount_price
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
@@ -47,8 +51,8 @@ const ProductDetail = () => {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="relative aspect-square rounded-xl overflow-hidden bg-muted">
             <img src={imageUrl} alt={product.name} className="w-full h-full object-cover" />
-            {product.stock > 0 && product.stock < 5 && (
-              <Badge className="absolute top-4 left-4 bg-destructive">Only {product.stock} left!</Badge>
+            {availableUnits > 0 && availableUnits < 5 && (
+              <Badge className="absolute top-4 left-4 bg-destructive">Only {availableUnits} left!</Badge>
             )}
           </div>
 
@@ -96,10 +100,10 @@ const ProductDetail = () => {
                 addItem(product);
                 toast.success("Added to cart!");
               }}
-              disabled={product.stock === 0}
+              disabled={availableUnits === 0}
             >
               <ShoppingCart className="mr-2 h-5 w-5" />
-              {product.stock === 0 ? "Out of Stock" : "Add to Cart"}
+              {availableUnits === 0 ? "Out of Stock" : "Add to Cart"}
             </Button>
           </div>
         </div>

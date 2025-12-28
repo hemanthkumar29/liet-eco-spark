@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -8,7 +7,8 @@ import { Order } from "@/types/product";
 import { Leaf, LogOut, Download, Search, ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { format, parseISO, startOfDay, isSameDay } from "date-fns";
+import { format, parseISO, isSameDay } from "date-fns";
+import { fetchOrders, updateOrder } from "@/lib/api";
 
 interface GroupedOrders {
   [date: string]: Order[];
@@ -16,8 +16,6 @@ interface GroupedOrders {
 
 const AdminOrders = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState<Order[]>([]);
   const [groupedOrders, setGroupedOrders] = useState<GroupedOrders>({});
@@ -26,93 +24,32 @@ const AdminOrders = () => {
   const [statusFilter, setStatusFilter] = useState("all");
 
   useEffect(() => {
-    checkAuth();
-    setupRealtimeSubscription();
-  }, []);
+    const authed = localStorage.getItem("liet-admin-authed");
+    if (authed !== "true") {
+      navigate("/admin");
+      return;
+    }
+    loadOrders();
+  }, [navigate]);
 
   useEffect(() => {
     if (orders.length > 0) {
       groupOrdersByDate();
+    } else {
+      setGroupedOrders({});
     }
   }, [orders, searchTerm, statusFilter]);
 
-  const checkAuth = async () => {
+  const loadOrders = async () => {
+    setLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user) {
-        navigate("/");
-        return;
-      }
-
-      setUser(session.user);
-
-      // Check if user has admin role
-      const { data: roleData } = await (supabase as any)
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", session.user.id)
-        .single();
-
-      if (roleData?.role === "admin") {
-        setIsAdmin(true);
-        fetchOrders();
-      } else {
-        // Not an admin - show nothing (404-like behavior)
-        navigate("/");
-      }
+      const data = await fetchOrders();
+      setOrders(data);
     } catch (error) {
-      navigate("/");
+      console.error("Failed to load orders", error);
+      toast.error("Unable to fetch orders");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const setupRealtimeSubscription = () => {
-    const channel = supabase
-      .channel("orders-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: "orders",
-        },
-        (payload) => {
-          const newOrder = payload.new as Order;
-          setOrders((prev) => [newOrder, ...prev]);
-          toast.success(`New order from ${newOrder.customer_name}`);
-        }
-      )
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "orders",
-        },
-        (payload) => {
-          const updatedOrder = payload.new as Order;
-          setOrders((prev) =>
-            prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order))
-          );
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  };
-
-  const fetchOrders = async () => {
-    const { data } = await (supabase as any)
-      .from("orders")
-      .select("*")
-      .order("created_at", { ascending: false });
-    
-    if (data) {
-      setOrders(data as Order[]);
     }
   };
 
@@ -195,15 +132,13 @@ const AdminOrders = () => {
   };
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
-    const { error } = await (supabase as any)
-      .from("orders")
-      .update({ status: newStatus })
-      .eq("id", orderId);
-
-    if (error) {
-      toast.error("Failed to update status");
-    } else {
+    try {
+      const updated = await updateOrder(orderId, { status: newStatus });
+      setOrders((prev) => prev.map((order) => (order.order_id === updated.order_id ? updated : order)));
       toast.success("Status updated");
+    } catch (error) {
+      console.error("Status update failed", error);
+      toast.error("Failed to update status");
     }
   };
 
@@ -251,14 +186,16 @@ const AdminOrders = () => {
     );
   }
 
-  if (!isAdmin) {
-    return null;
-  }
+  const handleLogout = () => {
+    localStorage.removeItem("liet-admin-authed");
+    navigate("/admin");
+  };
 
-  const todayOrders = orders.filter((o) =>
-    isSameDay(parseISO(o.created_at), new Date())
+  const todayOrders = useMemo(
+    () => orders.filter((o) => isSameDay(parseISO(o.created_at), new Date())),
+    [orders]
   );
-  const todayRevenue = todayOrders.reduce((sum, o) => sum + Number(o.total_amount), 0);
+  const todayRevenue = todayOrders.reduce((sum, o) => sum + Number(o.total_amount ?? 0), 0);
 
   return (
     <div className="min-h-screen bg-liet-bg">
@@ -271,11 +208,11 @@ const AdminOrders = () => {
               <div>
                 <h1 className="text-2xl font-bold text-liet-primary">LIET Admin Dashboard</h1>
                 <p className="text-sm text-muted-foreground">
-                  Welcome, {user?.email}
+                  Orders are saved locally and mirrored to CSV in /data
                 </p>
               </div>
             </div>
-            <Button onClick={() => supabase.auth.signOut()} variant="outline">
+            <Button onClick={handleLogout} variant="outline">
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>
@@ -417,7 +354,7 @@ const AdminOrders = () => {
                               </div>
                               <Select
                                 value={order.status || "Pending"}
-                                onValueChange={(value) => updateOrderStatus(order.id, value)}
+                                onValueChange={(value) => updateOrderStatus(order.order_id, value)}
                               >
                                 <SelectTrigger className="w-32">
                                   <SelectValue />

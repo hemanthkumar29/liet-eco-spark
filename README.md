@@ -71,3 +71,13 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+## Local order storage
+
+- Orders and products live in plain JSON/CSV under `/data`. Keep that folder under version control for backups.
+- Copy `.env.example` (or `.env`) to `.env.local` and adjust:
+	- `VITE_API_BASE_URL` – leave empty for same-origin calls, or point to your deployed API URL.
+	- `VITE_ADMIN_PASSCODE` – simple passcode used by the admin screen; change it after cloning.
+- Start the API locally with `npm run server` (port 5000 by default) and the React app with `npm run dev`. The Vite dev server proxies `/api/*` to the backend.
+- Order submissions append to `data/orders.json` and rewrite `data/orders.csv` so you can open it straight in Excel or Google Sheets.
+- When you need a timestamped export, run `node scripts/export-orders.mjs`; files land in `/exports`.

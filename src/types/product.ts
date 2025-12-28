@@ -7,11 +7,21 @@ export interface Product {
   category: string;
   image_url: string | null;
   features: string[] | null;
-  created_at: string;
+  created_at: string | null;
   discount_price?: number | null;
+  quantity_available?: number;
+  in_stock?: boolean;
 }
 
 export interface CartItem extends Product {
+  quantity: number;
+}
+
+export interface OrderProduct {
+  id: string;
+  name: string;
+  price: number;
+  discount_price: number | null;
   quantity: number;
 }
 
@@ -26,12 +36,11 @@ export interface Order {
   department: string;
   year: string;
   section: string;
-  products: CartItem[];
-  total_amount: number | null;
+  products: OrderProduct[];
+  total_amount: number;
   created_at: string;
-  status?: string;
-  price_pending?: boolean;
-  notes?: string | null;
-  user_id?: string | null;
-  idempotency_key?: string | null;
+  updated_at: string;
+  status: string;
+  price_pending: boolean;
+  notes: string | null;
 }

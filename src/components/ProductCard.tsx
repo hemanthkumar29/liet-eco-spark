@@ -19,10 +19,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   const discountPercent = product.discount_price
     ? Math.round(((product.price - product.discount_price) / product.price) * 100)
     : 0;
+  const availableUnits = product.quantity_available ?? product.stock ?? 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (product.stock > 0) {
+    if (availableUnits > 0) {
       addItem(product);
       toast.success(`${product.name} added to cart!`);
     } else {
@@ -44,9 +45,9 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           alt={product.name}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
         />
-        {product.stock > 0 && product.stock < 5 && (
+        {availableUnits > 0 && availableUnits < 5 && (
           <Badge className="absolute top-3 left-3 bg-destructive text-destructive-foreground">
-            Only {product.stock} left!
+            Only {availableUnits} left!
           </Badge>
         )}
         {discountPercent > 0 && (
@@ -96,7 +97,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           
           <Button
             onClick={handleAddToCart}
-            disabled={product.stock === 0}
+            disabled={availableUnits === 0}
             size="sm"
             className="bg-gradient-cta hover:opacity-90 transition-opacity"
           >

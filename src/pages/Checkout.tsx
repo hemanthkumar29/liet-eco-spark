@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCartStore } from "@/lib/cartStore";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
+import { buildOrderItemsFromCart, createOrder } from "@/lib/api";
 
 const checkoutSchema = z.object({
   customer_name: z.string().min(1, "Name is required").max(100),
@@ -42,65 +42,25 @@ const Checkout = () => {
       checkoutSchema.parse(formData);
       setIsSubmitting(true);
 
-      // Generate idempotency key for retry safety
-      const idempotencyKey = `${formData.mobile_number}-${Date.now()}-${crypto.randomUUID()}`;
-
-      const { data, error } = await supabase.functions.invoke('create-order', {
-        body: {
-          customer_name: formData.customer_name,
-          address: formData.address,
-          mobile_number: formData.mobile_number,
-          whatsapp_number: formData.whatsapp_number,
-          student_roll: formData.student_roll,
-          department: formData.department,
-          year: formData.year,
-          section: formData.section,
-          items: items.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            discount_price: item.discount_price,
-            quantity: item.quantity,
-          })),
-        },
-        headers: {
-          'x-idempotency-key': idempotencyKey,
-        },
+      const order = await createOrder({
+        customer_name: formData.customer_name,
+        address: formData.address,
+        mobile_number: formData.mobile_number,
+        whatsapp_number: formData.whatsapp_number,
+        student_roll: formData.student_roll,
+        department: formData.department,
+        year: formData.year,
+        section: formData.section,
+        items: buildOrderItemsFromCart(items),
       });
 
-      if (error) {
-        console.error('Order error:', error);
-        
-        // Handle specific error codes
-        if (error.context?.code === 'OUT_OF_STOCK') {
-          toast.error(`Some items are no longer available. ${error.context.error}`, {
-            duration: 5000,
-          });
-          // Optionally update cart to reflect available stock
-          return;
-        }
-        
-        throw error;
-      }
+      toast.success("Order placed successfully!");
 
-      if (!data?.order) {
-        throw new Error('No order data returned');
-      }
-
-      const orderId = data.order.order_id;
-      
-      // Show appropriate message based on price_pending
-      if (data.price_pending) {
-        toast.success('Order confirmed! Some prices are pending - admin will update you.', {
-          duration: 6000,
-        });
-      } else {
-        toast.success('Order placed successfully!');
-      }
+      const orderId = order.order_id;
 
       clearCart();
       navigate(`/order-confirmation/${orderId}`, { 
-        state: { orderData: data.order }
+        state: { orderData: order }
       });
       
     } catch (error) {
@@ -108,7 +68,8 @@ const Checkout = () => {
         toast.error(error.errors[0].message);
       } else {
         console.error('Order submission error:', error);
-        toast.error("Failed to place order. Please try again.", {
+        const errorMessage = error instanceof Error ? error.message : "Failed to place order. Please try again.";
+        toast.error(errorMessage, {
           action: {
             label: 'Retry',
             onClick: () => handleSubmit(e as any),

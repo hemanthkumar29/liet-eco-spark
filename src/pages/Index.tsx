@@ -4,12 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ProductCard } from "@/components/ProductCard";
 import { CartDrawer } from "@/components/CartDrawer";
-import { supabase } from "@/integrations/supabase/client";
 import { Product } from "@/types/product";
 import { Leaf, Zap, Shield, Search, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroBanner from "@/assets/hero-banner.jpg";
 import lietLogo from "@/assets/liet-logo.jpg";
+import { fetchProducts as fetchProductsApi } from "@/lib/api";
 
 const Index = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -29,17 +29,15 @@ const Index = () => {
 
   const fetchProducts = async () => {
     setIsLoading(true);
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .order("price", { ascending: true });
-
-    if (error) {
+    try {
+      const data = await fetchProductsApi();
+      setProducts(data);
+    } catch (error) {
       console.error("Error fetching products:", error);
-    } else {
-      setProducts(data || []);
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const filterProducts = () => {
