@@ -2,6 +2,15 @@ import type { Product, Order, CartItem } from "@/types/product";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 
+async function fetchStaticProducts(): Promise<Product[]> {
+  const response = await fetch("/products.json", { cache: "no-cache" });
+  if (!response.ok) {
+    throw new Error("Failed to load static products");
+  }
+  const products = (await response.json()) as Product[];
+  return products;
+}
+
 async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
@@ -49,13 +58,29 @@ export interface CreateOrderPayload {
 }
 
 export async function fetchProducts(): Promise<Product[]> {
-  const data = await apiRequest<{ products: Product[] }>("/api/products");
-  return data.products;
+  try {
+    const data = await apiRequest<{ products: Product[] }>("/api/products");
+    return data.products;
+  } catch (error) {
+    // Fallback for static deployments without the API server
+    console.warn("Falling back to static products.json", error);
+    return fetchStaticProducts();
+  }
 }
 
 export async function fetchProductById(id: string): Promise<Product> {
-  const data = await apiRequest<{ product: Product }>(`/api/products/${id}`);
-  return data.product;
+  try {
+    const data = await apiRequest<{ product: Product }>(`/api/products/${id}`);
+    return data.product;
+  } catch (error) {
+    console.warn("Falling back to static products.json for product", id, error);
+    const products = await fetchStaticProducts();
+    const found = products.find((p) => p.id === id);
+    if (!found) {
+      throw new Error("Product not found");
+    }
+    return found;
+  }
 }
 
 export async function createOrder(payload: CreateOrderPayload): Promise<Order> {

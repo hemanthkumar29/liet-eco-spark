@@ -1,83 +1,55 @@
-# Welcome to your Lovable project
+# LIET Eco-Spark Store
 
-## Project info
+Student-built storefront for LIET-made lighting products. Frontend is React + Vite; backend is a lightweight Express API that persists data to local JSON/CSV files (no external services required).
 
-**URL**: https://lovable.dev/projects/34ccc345-ea25-404e-8499-dc56517dc296
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/34ccc345-ea25-404e-8499-dc56517dc296) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Quick start
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+npm install
+npm run server   # starts API on http://localhost:5000
+npm run dev      # starts Vite on http://localhost:8080 with /api proxy
 ```
 
-**Edit a file directly in GitHub**
+## Environment
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Copy `.env.example` to `.env.local` (or `.env`) and adjust:
+	- `VITE_API_BASE_URL` (leave empty for same-origin in dev)
+	- `VITE_ADMIN_PASSCODE` (used for the admin gate)
 
-**Use GitHub Codespaces**
+## Data model (file-backed)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- Products: `data/products.json` — edit to change the catalog. Each item uses `quantity_available` for stock.
+- Orders: `data/orders.json` — every checkout writes a record here.
+- CSV: `data/orders.csv` — regenerated on each order create/update for spreadsheet use.
+- Extra exports: run `node scripts/export-orders.mjs` to drop timestamped CSVs into `/exports`.
 
-## What technologies are used for this project?
+## Frontend features
 
-This project is built with:
+- Product grid, detail pages, cart (Zustand), and checkout form with validation.
+- Admin access via `/admin` using the passcode → redirects to `/._admin_hidden_link_8462` for order list, filtering, status/notes updates, and CSV export.
+- Tailwind + shadcn components for UI.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## API (Express)
 
-## How can I deploy this project?
+- `GET /api/products` — list catalog.
+- `GET /api/products/:id` — single product.
+- `POST /api/orders` — create order; validates required fields and stock, decrements inventory, rewrites CSV.
+- `GET /api/orders` — list orders (newest first).
+- `GET /api/orders/:orderId` — fetch one.
+- `PATCH /api/orders/:orderId` — update status/notes/amount/price_pending, refresh CSV.
 
-Simply open [Lovable](https://lovable.dev/projects/34ccc345-ea25-404e-8499-dc56517dc296) and click on Share -> Publish.
+## Build & deploy
 
-## Can I connect a custom domain to my Lovable project?
+```sh
+npm run build    # builds React app to dist/
+npm run server   # can serve dist/ plus the API in production
+```
 
-Yes, you can!
+Host the static `dist/` with the Express server (already configured to serve it when present). Back up `data/` or commit it to preserve orders/products.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Testing checklist
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
-
-## Local order storage
-
-- Orders and products live in plain JSON/CSV under `/data`. Keep that folder under version control for backups.
-- Copy `.env.example` (or `.env`) to `.env.local` and adjust:
-	- `VITE_API_BASE_URL` – leave empty for same-origin calls, or point to your deployed API URL.
-	- `VITE_ADMIN_PASSCODE` – simple passcode used by the admin screen; change it after cloning.
-- Start the API locally with `npm run server` (port 5000 by default) and the React app with `npm run dev`. The Vite dev server proxies `/api/*` to the backend.
-- Order submissions append to `data/orders.json` and rewrite `data/orders.csv` so you can open it straight in Excel or Google Sheets.
-- When you need a timestamped export, run `node scripts/export-orders.mjs`; files land in `/exports`.
+- Start API and Vite; load homepage — products should render.
+- Place a test order — confirm `data/orders.json` and `data/orders.csv` update.
+- Open `/admin`, enter passcode, verify order list and status updates.
+- Run `node scripts/export-orders.mjs` and open the generated CSV in `/exports`.

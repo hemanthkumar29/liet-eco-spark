@@ -1,0 +1,70 @@
+[
+  {
+    "id": "prod-ceiling-light",
+    "name": "Ceiling Light",
+    "description": "Elegant ceiling light engineered by LIET students for hostel rooms and study halls.",
+    "price": 199,
+    "discount_price": null,
+    "stock": 40,
+    "category": "Ceiling Lights",
+    "image_url": null,
+    "features": [
+      "Warm white glow",
+      "Durable housing",
+      "Easy installation"
+    ],
+    "created_at": null,
+    "quantity_available": 40
+  },
+  {
+    "id": "prod-tube-light",
+    "name": "Tube Light",
+    "description": "Energy-saving tube light delivering bright illumination for labs and classrooms.",
+    "price": 129,
+    "discount_price": null,
+    "stock": 35,
+    "category": "Tube Lights",
+    "image_url": null,
+    "features": [
+      "Cool daylight",
+      "Instant start",
+      "Low power consumption"
+    ],
+    "created_at": null,
+    "quantity_available": 35
+  },
+  {
+    "id": "prod-inverter-bulb",
+    "name": "Inverter Bulb",
+    "description": "Built-in backup keeps the bulb glowing during power cuts — perfect for hostels.",
+    "price": 199,
+    "discount_price": null,
+    "stock": 25,
+    "category": "Backup Lighting",
+    "image_url": null,
+    "features": [
+      "Up to 4 hours backup",
+      "Automatic charging",
+      "Shock resistant"
+    ],
+    "created_at": null,
+    "quantity_available": 25
+  },
+  {
+    "id": "prod-normal-bulb",
+    "name": "Normal Bulb",
+    "description": "Affordable everyday bulb offering reliable brightness with minimal power draw.",
+    "price": 49,
+    "discount_price": null,
+    "stock": 60,
+    "category": "LED Bulbs",
+    "image_url": null,
+    "features": [
+      "Soft warm tone",
+      "Long life LEDs",
+      "Great value"
+    ],
+    "created_at": null,
+    "quantity_available": 60
+  }
+]
