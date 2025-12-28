@@ -1,6 +1,7 @@
 import type { Product, Order, CartItem } from "@/types/product";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").trim().replace(/\/$/, "");
+const IS_PROD = import.meta.env.PROD;
 
 async function fetchStaticProducts(): Promise<Product[]> {
   const response = await fetch("/products.json", { cache: "no-cache" });
@@ -12,25 +13,51 @@ async function fetchStaticProducts(): Promise<Product[]> {
 }
 
 async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers ?? {}),
-    },
-  });
+  const url = `${API_BASE}${path}`;
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers ?? {}),
+      },
+    });
+  } catch (error) {
+    const hint = API_BASE
+      ? `Unable to reach API at ${API_BASE}`
+      : IS_PROD
+        ? "Order API unreachable from deployed site. Set VITE_API_BASE_URL to your hosted API (https://<host>)."
+        : "Unable to reach local API. Is npm run server running?";
+    const detail = error instanceof Error ? `${error.message}. ${hint}` : hint;
+    throw new Error(detail);
+  }
 
   if (!response.ok) {
-    let message = response.statusText;
+    let detail = `${response.status} ${response.statusText}`.trim();
+    let bodyText = "";
+
     try {
-      const body = await response.json();
-      if (body?.error) {
-        message = body.error;
+      bodyText = await response.text();
+      if (bodyText) {
+        try {
+          const parsed = JSON.parse(bodyText);
+          detail = (parsed?.error || parsed?.message || detail).toString();
+        } catch (parseError) {
+          // non-JSON error payloads
+          detail = bodyText;
+        }
       }
-    } catch (error) {
-      // ignore json parse errors
+    } catch (readError) {
+      // ignore body read failures
     }
-    throw new Error(message || "Request failed");
+
+    if (!API_BASE && IS_PROD && response.status === 404) {
+      detail = "Order API not found on this host. Configure VITE_API_BASE_URL to point at your deployed API (https://<host>/api).";
+    }
+
+    throw new Error(detail || "Request failed");
   }
 
   if (response.status === 204) {
