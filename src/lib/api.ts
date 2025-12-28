@@ -3,6 +3,21 @@ import type { Product, Order, CartItem } from "@/types/product";
 const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? "").trim().replace(/\/$/, "");
 const IS_PROD = import.meta.env.PROD;
 
+function buildApiUrl(path: string): string {
+  const cleanedPath = path.startsWith("/") ? path : `/${path}`;
+
+  if (!API_BASE) {
+    return cleanedPath;
+  }
+
+  // Avoid double /api when the base already includes it
+  if (API_BASE.endsWith("/api") && cleanedPath.startsWith("/api/")) {
+    return `${API_BASE}${cleanedPath.slice(4)}`;
+  }
+
+  return `${API_BASE}${cleanedPath}`;
+}
+
 async function fetchStaticProducts(): Promise<Product[]> {
   const response = await fetch("/products.json", { cache: "no-cache" });
   if (!response.ok) {
@@ -13,7 +28,7 @@ async function fetchStaticProducts(): Promise<Product[]> {
 }
 
 async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const url = `${API_BASE}${path}`;
+  const url = buildApiUrl(path);
   let response: Response;
 
   try {
@@ -57,7 +72,8 @@ async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T
       detail = "Order API not found on this host. Configure VITE_API_BASE_URL to point at your deployed API (https://<host>/api).";
     }
 
-    throw new Error(detail || "Request failed");
+    const urlHint = `URL: ${url}`;
+    throw new Error([detail || "Request failed", urlHint].filter(Boolean).join(" | "));
   }
 
   if (response.status === 204) {
