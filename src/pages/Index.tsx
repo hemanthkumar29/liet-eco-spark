@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import heroBanner from "@/assets/hero-banner.jpg";
 import lietLogo from "@/assets/liet-logo.jpg";
 import { fetchProducts as fetchProductsApi } from "@/lib/api";
+const lendiLogoSrc = "/lendi-logo.png"; // expected in public/
 
 const Index = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,10 +22,10 @@ const Index = () => {
   const navigate = useNavigate();
 
   const navLinks = [
-    { label: "About", target: "about" },
-    { label: "Products", target: "products" },
-    { label: "Why LIET", target: "impact" },
-    { label: "Contact", target: "footer" },
+    { label: "About", target: "/about", type: "route" as const },
+    { label: "Products", target: "products", type: "anchor" as const },
+    { label: "Why LIET", target: "impact", type: "anchor" as const },
+    { label: "Contact", target: "footer", type: "anchor" as const },
   ];
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const Index = () => {
                 variant="ghost"
                 size="sm"
                 className="text-sm font-medium text-muted-foreground hover:text-foreground"
-                onClick={() => scrollTo(link.target)}
+                onClick={() => (link.type === "route" ? navigate(link.target) : scrollTo(link.target))}
               >
                 {link.label}
               </Button>
@@ -140,7 +141,7 @@ const Index = () => {
                   key={link.label}
                   variant="ghost"
                   className="justify-start text-base"
-                  onClick={() => scrollTo(link.target)}
+                  onClick={() => (link.type === "route" ? navigate(link.target) : scrollTo(link.target))}
                 >
                   {link.label}
                 </Button>
@@ -167,6 +168,9 @@ const Index = () => {
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10 items-center">
             <div className="space-y-6 fade-up">
+              <div className="flex items-center">
+                <img src={lendiLogoSrc} alt="Lendi logo" className="h-20 w-auto object-contain" />
+              </div>
               <Badge className="bg-white text-primary shadow-card w-fit">
                 <Shield className="mr-2 h-3 w-3 text-primary" /> Official LIET Energy-Conservation Product
               </Badge>
@@ -204,40 +208,6 @@ const Index = () => {
                 <img src={heroBanner} alt="LIET LED Products" className="w-full h-full object-cover" />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className="py-14 bg-white/90">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center space-y-4 mb-10">
-            <Badge className="bg-primary/10 text-primary border-primary/20">About the initiative</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Built by students, for a brighter campus</h2>
-            <p className="text-lg text-muted-foreground">
-              Our LED Bulb Manufacturing Unit at LIET is dedicated to developing energy-efficient lighting solutions while promoting sustainability and reducing electronic waste (e-waste). This initiative is powered by students of the Energy Conservation Club, EEE Department.
-            </p>
-            <p className="text-base text-muted-foreground">
-              Every batch is prototyped, assembled, and tested on campus using industry-aligned practices. LEDs consume up to 80% less energy than incandescent bulbs, and responsible end-of-life collection keeps heavy metals out of landfills.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[{
-              icon: <Zap className="h-10 w-10 text-primary" />, title: "Energy-first design", desc: "High-lumen, low-watt drivers tuned for hostel and lab use." },
-            {
-              icon: <Leaf className="h-10 w-10 text-secondary" />, title: "E-waste responsibility", desc: "Campus collection drives channel spent bulbs to certified recyclers." },
-            {
-              icon: <Shield className="h-10 w-10 text-accent" />, title: "Student-led QA", desc: "Energy Conservation Club oversees testing, safety, and awareness sessions." }
-            ].map((item) => (
-              <div key={item.title} className="p-6 rounded-xl border border-border/60 bg-white shadow-soft">
-                <div className="flex items-center gap-3 mb-3">
-                  {item.icon}
-                  <h3 className="font-semibold text-lg">{item.title}</h3>
-                </div>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
