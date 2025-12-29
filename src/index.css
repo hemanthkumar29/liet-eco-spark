@@ -56,7 +56,8 @@ All colors MUST be HSL.
     /* Custom Gradients */
     --gradient-hero: linear-gradient(135deg, hsl(158 67% 32%), hsl(158 67% 45%));
     --gradient-eco: linear-gradient(135deg, hsl(74 69% 51%), hsl(74 69% 65%));
-    --gradient-cta: linear-gradient(135deg, hsl(45 100% 71%), hsl(45 100% 80%));
+    /* CTA gradient tuned to match LIET greens while staying vivid */
+    --gradient-cta: linear-gradient(135deg, hsl(158 67% 36%), hsl(74 69% 50%));
     
     /* Shadows */
     --shadow-soft: 0 2px 20px -5px hsl(158 67% 32% / 0.15);
@@ -95,6 +96,9 @@ All colors MUST be HSL.
 
   .bg-gradient-cta {
     background: var(--gradient-cta);
+    color: white;
+    box-shadow: 0 10px 30px -12px hsl(158 67% 25% / 0.35);
+    transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
   }
 
   .bg-gradient-eco {

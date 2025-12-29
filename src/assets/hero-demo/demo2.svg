@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Sustainable campus lighting illustration</title>
+  <desc id="desc">Minimal illustration of campus buildings with efficient lighting.</desc>
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f9b4c" />
+      <stop offset="100%" stop-color="#7bd87a" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="#f5faf7" />
+  <rect x="120" y="180" width="960" height="440" rx="30" fill="url(#g2)" opacity="0.92" />
+  <rect x="200" y="240" width="800" height="320" rx="26" fill="#ffffff" opacity="0.9" />
+  <path d="M240 520 L340 360 L440 520 Z" fill="#ffd166" opacity="0.95" />
+  <rect x="500" y="320" width="160" height="200" rx="18" fill="#118ab2" opacity="0.9" />
+  <rect x="700" y="300" width="200" height="220" rx="22" fill="#073b4c" opacity="0.92" />
+  <circle cx="360" cy="300" r="46" fill="#06d6a0" opacity="0.85" />
+  <circle cx="600" cy="270" r="32" fill="#ffd166" opacity="0.85" />
+  <text x="230" y="620" fill="#0f5132" font-family="Arial, sans-serif" font-size="42" font-weight="700">Energy-smart campus lighting</text>
+  <text x="230" y="670" fill="#0f5132" font-family="Arial, sans-serif" font-size="24" opacity="0.8">LED retrofits & responsible sourcing</text>
+</svg>

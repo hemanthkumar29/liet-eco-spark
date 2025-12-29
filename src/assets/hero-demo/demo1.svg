@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Campus lighting lab mock</title>
+  <desc id="desc">Abstract illustration of a lighting lab with gradients.</desc>
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0c8c55" />
+      <stop offset="50%" stop-color="#58c174" />
+      <stop offset="100%" stop-color="#b0f4a4" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="#f7fbf9" />
+  <rect x="80" y="120" width="1040" height="520" rx="32" fill="url(#g1)" opacity="0.9" />
+  <rect x="160" y="200" width="880" height="360" rx="28" fill="#ffffff" opacity="0.86" />
+  <circle cx="360" cy="380" r="90" fill="#ffd166" opacity="0.9" />
+  <circle cx="520" cy="380" r="70" fill="#06d6a0" opacity="0.9" />
+  <circle cx="700" cy="380" r="110" fill="#118ab2" opacity="0.9" />
+  <rect x="820" y="240" width="160" height="280" rx="22" fill="#073b4c" opacity="0.9" />
+  <text x="200" y="640" fill="#0f5132" font-family="Arial, sans-serif" font-size="44" font-weight="700">LIET Lighting Lab</text>
+  <text x="200" y="690" fill="#0f5132" font-family="Arial, sans-serif" font-size="26" opacity="0.8">Prototyping energy-efficient fixtures</text>
+</svg>
