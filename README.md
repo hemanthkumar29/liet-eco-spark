@@ -1,4 +1,4 @@
-# LIET Eco-Spark Store
+# LIET - Lighting Innovations & Energy Technologies Store
 
 Student-built storefront for LIET-made lighting products. Frontend is React + Vite; backend is a lightweight Express API that persists data to local JSON/CSV files (no external services required).
 

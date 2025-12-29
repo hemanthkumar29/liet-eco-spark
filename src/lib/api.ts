@@ -103,6 +103,10 @@ export interface CreateOrderPayload {
 export async function fetchProducts(): Promise<Product[]> {
   try {
     const data = await apiRequest<{ products: Product[] }>("/api/products");
+    if (!data.products || data.products.length === 0) {
+      console.warn("API returned no products; using static fallback");
+      return fetchStaticProducts();
+    }
     return data.products;
   } catch (error) {
     // Fallback for static deployments without the API server
@@ -114,6 +118,15 @@ export async function fetchProducts(): Promise<Product[]> {
 export async function fetchProductById(id: string): Promise<Product> {
   try {
     const data = await apiRequest<{ product: Product }>(`/api/products/${id}`);
+    if (!data.product) {
+      console.warn("API returned no product; using static fallback", id);
+      const products = await fetchStaticProducts();
+      const found = products.find((p) => p.id === id);
+      if (!found) {
+        throw new Error("Product not found");
+      }
+      return found;
+    }
     return data.product;
   } catch (error) {
     console.warn("Falling back to static products.json for product", id, error);

@@ -86,7 +86,7 @@ const Index = () => {
               className="h-12 w-12 rounded-xl object-contain shadow-sm"
             />
             <div>
-              <h1 className="text-2xl font-bold text-primary">LIET Eco-Spark</h1>
+              <h1 className="text-2xl font-bold text-primary">LIET - Lighting Innovations & Energy Technologies</h1>
               <p className="text-xs text-muted-foreground">Energy Conservation Initiative</p>
             </div>
           </div>
@@ -295,12 +295,12 @@ const Index = () => {
                 className="h-14 w-14 object-contain bg-white/10 rounded-lg p-3"
               />
               <div>
-                <h3 className="text-xl font-semibold">LIET Eco-Spark</h3>
+                <h3 className="text-xl font-semibold">LIET - Lighting Innovations & Energy Technologies</h3>
                 <p className="text-sm opacity-90">Lighting the campus sustainably.</p>
               </div>
             </div>
             <div className="text-sm opacity-90 text-center lg:text-right">
-              © 2025 LIET Eco-Spark Initiative. Made with 💚 by LIET students for a sustainable future.
+              © 2025 LIET - Lighting Innovations & Energy Technologies Initiative. Made with 💚 by LIET students for a sustainable future.
             </div>
           </div>
         </div>
