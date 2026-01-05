@@ -50,7 +50,7 @@
       "Shock resistant"
     ],
     "created_at": null,
-    "quantity_available": 24,
+    "quantity_available": 22,
     "in_stock": true
   },
   {
@@ -68,7 +68,7 @@
       "Great value"
     ],
     "created_at": null,
-    "quantity_available": 60,
+    "quantity_available": 57,
     "in_stock": true
   }
 ]

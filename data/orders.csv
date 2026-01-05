@@ -1,3 +1,4 @@
 order_id,created_at,updated_at,customer_name,student_roll,department,year,section,address,mobile_number,whatsapp_number,total_amount,status,price_pending,notes,product_count,total_units,products_summary
+LIET-ORD-20260105-113057-V0TLIX,2026-01-05T06:00:57.067Z,2026-01-05T06:00:57.067Z,Ch Sohitha Sai,23KD1A0219,EEE,3,A,Vizianagaram,9392749869,9392749869,545,confirmed,false,,2,5,Inverter Bulb x2 @ 199 | Normal Bulb x3 @ 49
 LIET-ORD-20251228-170433-MMS0N6,2025-12-28T11:34:33.974Z,2025-12-28T11:34:33.974Z,wdf,we,wrf,we,wrf,we,7075915507,7075915507,328,confirmed,false,,2,2,Inverter Bulb x1 @ 199 | Tube Light x1 @ 129
 LIET-ORD-20251228-164415-R4NHZU,2025-12-28T11:14:15.348Z,2025-12-28T11:14:15.348Z,Hemanth Kumar,23KD1A0220,EEE,3,A,ajkds,7075915507,7075915507,129,confirmed,false,,1,1,Tube Light x1 @ 129

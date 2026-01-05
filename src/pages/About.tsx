@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -8,6 +9,32 @@ const lendiLogoSrc = "/lendi-logo.png"; // expected in public/
 
 const About = () => {
   const navigate = useNavigate();
+  const visionMissionSlides = [
+    {
+      title: "Vision",
+      points: [
+        "To become a leading provider of sustainable LED lighting and retrofitting solutions that reduce energy consumption and e-waste.",
+        "To deliver reliable, affordable, and eco-friendly lighting technologies that benefit homes, industries, and communities across all regions.",
+      ],
+    },
+    {
+      title: "Mission",
+      points: [
+        "To design and assemble high-quality, energy-efficient LED products and extend the lifespan of existing lighting systems through repair and retrofitting.",
+        "To innovate in smart and inverter-compatible lighting solutions that ensure durability, affordability, and uninterrupted illumination.",
+      ],
+    },
+  ];
+
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  // Auto-advance the vision/mission slider.
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % visionMissionSlides.length);
+    }, 5500);
+    return () => window.clearInterval(id);
+  }, [visionMissionSlides.length]);
 
   return (
     <div className="min-h-screen bg-white text-foreground">
@@ -30,6 +57,52 @@ const About = () => {
       </header>
 
       <main className="container mx-auto px-4 py-12 space-y-12">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-hero text-primary-foreground shadow-2xl border border-white/40">
+          <div className="absolute inset-0 opacity-15 bg-[radial-gradient(circle_at_top,_#ffffff,_transparent_45%)]" aria-hidden />
+          <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-8 p-8 lg:p-12 items-center">
+            <div className="space-y-3 lg:col-span-1">
+              <p className="text-xs uppercase tracking-[0.2em] text-primary-foreground/80">Our direction</p>
+              <h2 className="text-3xl font-bold">Vision & Mission</h2>
+              <p className="text-base text-primary-foreground/80">
+                Where we are headed and how we plan to get there—kept simple as a two-slide loop.
+              </p>
+              <div className="flex gap-3 pt-3">
+                <Button variant="secondary" size="sm" onClick={() => setSlideIndex((prev) => (prev + visionMissionSlides.length - 1) % visionMissionSlides.length)}>
+                  Previous
+                </Button>
+                <Button variant="secondary" size="sm" onClick={() => setSlideIndex((prev) => (prev + 1) % visionMissionSlides.length)}>
+                  Next
+                </Button>
+              </div>
+              <div className="flex gap-2 pt-4">
+                {visionMissionSlides.map((slide, idx) => (
+                  <span
+                    key={slide.title}
+                    className={`h-2 w-6 rounded-full transition-all ${idx === slideIndex ? "bg-white" : "bg-white/40"}`}
+                    aria-label={`${slide.title} slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <Card className="lg:col-span-2 bg-white text-foreground shadow-xl border-border/40 transition-all">
+              <div className="p-6 md:p-8 space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-semibold">{visionMissionSlides[slideIndex].title}</h3>
+                  <Badge variant="outline" className="uppercase tracking-[0.15em] text-xs">
+                    Slide {slideIndex + 1} / {visionMissionSlides.length}
+                  </Badge>
+                </div>
+                <ul className="list-disc list-inside space-y-3 text-base text-muted-foreground leading-relaxed">
+                  {visionMissionSlides[slideIndex].points.map((point) => (
+                    <li key={point}>{point}</li>
+                  ))}
+                </ul>
+              </div>
+            </Card>
+          </div>
+        </section>
+
         <section className="max-w-4xl mx-auto text-center space-y-4">
           <div className="flex justify-center">
             <img src={lendiLogoSrc} alt="Lendi logo" className="h-16 w-auto md:h-20 object-contain" />
