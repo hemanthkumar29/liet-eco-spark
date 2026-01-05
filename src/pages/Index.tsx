@@ -8,9 +8,6 @@ import { Product } from "@/types/product";
 import { Leaf, Zap, Shield, Search, User, Menu, X, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroBanner from "@/assets/hero-banner.jpg";
-import heroDemo1 from "@/assets/hero-demo/demo1.svg";
-import heroDemo2 from "@/assets/hero-demo/demo2.svg";
-import heroDemo3 from "@/assets/hero-demo/demo3.svg";
 import lietLogo from "@/assets/liet-logo.jpg";
 import { fetchProducts as fetchProductsApi } from "@/lib/api";
 const lendiLogoSrc = "/lendi-logo.png"; // expected in public/
@@ -31,10 +28,11 @@ const Index = () => {
     { label: "Contact", target: "footer", type: "anchor" as const },
   ];
 
+  // Replace the files in public/hero-slides (slide1.jpg, slide2.jpg, slide3.jpg) to update the carousel without code changes.
   const heroImages = [
-    { src: heroDemo1, alt: "Campus-built LED products" },
-    { src: heroDemo2, alt: "Energy-smart campus lighting" },
-    { src: heroDemo3, alt: "Student-led LED assembly" },
+    { src: "/hero-slides/slide1.jpg", alt: "Campus-built LED products" },
+    { src: "/hero-slides/slide2.jpg", alt: "Energy-smart campus lighting" },
+    { src: "/hero-slides/slide3.jpg", alt: "Student-led LED assembly" },
   ];
 
   const [heroIndex, setHeroIndex] = useState(0);
