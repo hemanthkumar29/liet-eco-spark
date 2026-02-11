@@ -8,6 +8,14 @@ import { useCartStore } from "@/lib/cartStore";
 import { toast } from "sonner";
 import { z } from "zod";
 import { buildOrderItemsFromCart, createOrder } from "@/lib/api";
+import { Tag, X, CheckCircle } from "lucide-react";
+
+// Coupon codes with their discount percentages (hidden from UI)
+const COUPON_CODES: Record<string, number> = {
+  "LIET100": 100,    // 100% discount (free)
+  "LIET5OFF": 5,     // 5% discount
+  "LIET75OFF": 75,   // 75% discount
+};
 
 const checkoutSchema = z.object({
   customer_name: z.string().min(1, "Name is required").max(100),
@@ -34,6 +42,43 @@ const Checkout = () => {
     section: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+  const [couponError, setCouponError] = useState("");
+
+  const subtotal = getTotalAmount();
+  const discountAmount = appliedCoupon ? (subtotal * appliedCoupon.discount) / 100 : 0;
+  const finalTotal = subtotal - discountAmount;
+
+  const handleApplyCoupon = () => {
+    setCouponError("");
+    const trimmedCode = couponCode.trim().toUpperCase();
+    
+    if (!trimmedCode) {
+      setCouponError("Please enter a coupon code");
+      return;
+    }
+
+    if (appliedCoupon) {
+      setCouponError("A coupon is already applied. Remove it first.");
+      return;
+    }
+
+    const discount = COUPON_CODES[trimmedCode];
+    if (discount !== undefined) {
+      setAppliedCoupon({ code: trimmedCode, discount });
+      setCouponCode("");
+      toast.success(`Coupon applied! You get ${discount}% off`);
+    } else {
+      setCouponError("Invalid coupon code");
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponError("");
+    toast.info("Coupon removed");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,10 +226,73 @@ const Checkout = () => {
               placeholder="Enter Section (e.g., A, B, C)"
             />
           </div>
+
+          {/* Coupon Code Section */}
           <div className="pt-4 border-t">
-            <div className="flex justify-between text-xl font-bold mb-4">
-              <span>Total:</span>
-              <span className="text-accent">₹{getTotalAmount().toFixed(2)}</span>
+            <Label htmlFor="coupon" className="flex items-center gap-2 mb-2">
+              <Tag className="h-4 w-4" />
+              Have a Coupon Code?
+            </Label>
+            {appliedCoupon ? (
+              <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="font-medium text-green-700 dark:text-green-400">
+                    {appliedCoupon.code} - {appliedCoupon.discount}% OFF
+                  </span>
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRemoveCoupon}
+                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Input
+                  id="coupon"
+                  value={couponCode}
+                  onChange={(e) => {
+                    setCouponCode(e.target.value);
+                    setCouponError("");
+                  }}
+                  placeholder="Enter coupon code"
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleApplyCoupon}
+                >
+                  Apply
+                </Button>
+              </div>
+            )}
+            {couponError && (
+              <p className="text-sm text-red-500 mt-1">{couponError}</p>
+            )}
+          </div>
+
+          <div className="pt-4 border-t">
+            <div className="space-y-2 mb-4">
+              <div className="flex justify-between text-muted-foreground">
+                <span>Subtotal:</span>
+                <span>₹{subtotal.toFixed(2)}</span>
+              </div>
+              {appliedCoupon && (
+                <div className="flex justify-between text-green-600">
+                  <span>Discount ({appliedCoupon.discount}%):</span>
+                  <span>-₹{discountAmount.toFixed(2)}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-xl font-bold">
+                <span>Total:</span>
+                <span className="text-accent">₹{finalTotal.toFixed(2)}</span>
+              </div>
             </div>
             <Button type="submit" className="w-full bg-gradient-cta" size="lg" disabled={isSubmitting}>
               {isSubmitting ? "Placing Order..." : "Place Order"}
