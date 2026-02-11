@@ -1,0 +1,27 @@
+# Netlify headers configuration for caching
+
+# Cache static assets for 1 year
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache product images
+/hero-slides/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# Cache products.json with stale-while-revalidate for fast loading
+/products.json
+  Cache-Control: public, max-age=300, stale-while-revalidate=86400
+  Content-Type: application/json
+
+# Cache other static files
+/*.png
+  Cache-Control: public, max-age=86400
+
+/*.jpg
+  Cache-Control: public, max-age=86400
+
+/*.svg
+  Cache-Control: public, max-age=86400
+
+/*.ico
+  Cache-Control: public, max-age=86400

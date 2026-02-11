@@ -19,7 +19,12 @@ function buildApiUrl(path: string): string {
 }
 
 async function fetchStaticProducts(): Promise<Product[]> {
-  const response = await fetch("/products.json", { cache: "no-cache" });
+  const response = await fetch("/products.json", { 
+    cache: "default",
+    headers: {
+      "Accept": "application/json",
+    }
+  });
   if (!response.ok) {
     throw new Error("Failed to load static products");
   }
@@ -101,8 +106,28 @@ export interface CreateOrderPayload {
 }
 
 export async function fetchProducts(): Promise<Product[]> {
+  // In production without API_BASE configured, skip the API call entirely
+  // to avoid timeout delays - use static products.json directly
+  if (IS_PROD && !API_BASE) {
+    try {
+      return await fetchStaticProducts();
+    } catch (error) {
+      console.error("Failed to load static products:", error);
+      return [];
+    }
+  }
+
+  // If API_BASE is configured, try API first with a short timeout
   try {
-    const data = await apiRequest<{ products: Product[] }>("/api/products");
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+    
+    const data = await apiRequest<{ products: Product[] }>("/api/products", {
+      signal: controller.signal,
+    });
+    
+    clearTimeout(timeoutId);
+    
     if (!data.products || data.products.length === 0) {
       console.warn("API returned no products; using static fallback");
       return fetchStaticProducts();
@@ -116,8 +141,26 @@ export async function fetchProducts(): Promise<Product[]> {
 }
 
 export async function fetchProductById(id: string): Promise<Product> {
+  // In production without API_BASE, use static products directly
+  if (IS_PROD && !API_BASE) {
+    const products = await fetchStaticProducts();
+    const found = products.find((p) => p.id === id);
+    if (!found) {
+      throw new Error("Product not found");
+    }
+    return found;
+  }
+
   try {
-    const data = await apiRequest<{ product: Product }>(`/api/products/${id}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    
+    const data = await apiRequest<{ product: Product }>(`/api/products/${id}`, {
+      signal: controller.signal,
+    });
+    
+    clearTimeout(timeoutId);
+    
     if (!data.product) {
       console.warn("API returned no product; using static fallback", id);
       const products = await fetchStaticProducts();
