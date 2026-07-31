@@ -78,14 +78,16 @@ const AdminOrders = () => {
     filtered.forEach((order) => {
       // Group by date using Asia/Kolkata timezone
       const utcDate = parseISO(order.created_at);
-      const kolkataDateStr = utcDate.toLocaleDateString('en-IN', {
+      const formatter = new Intl.DateTimeFormat('en-US', {
         timeZone: 'Asia/Kolkata',
         year: 'numeric',
         month: '2-digit',
         day: '2-digit'
       });
-      // Convert to yyyy-MM-dd format for consistency
-      const [day, month, year] = kolkataDateStr.split('/');
+      const parts = formatter.formatToParts(utcDate);
+      const year = parts.find(p => p.type === 'year')?.value;
+      const month = parts.find(p => p.type === 'month')?.value;
+      const day = parts.find(p => p.type === 'day')?.value;
       const dateKey = `${year}-${month}-${day}`;
       
       if (!grouped[dateKey]) {
@@ -105,13 +107,16 @@ const AdminOrders = () => {
 
     // Auto-expand today's orders (Asia/Kolkata timezone)
     const now = new Date();
-    const todayKolkataStr = now.toLocaleDateString('en-IN', {
+    const formatter = new Intl.DateTimeFormat('en-US', {
       timeZone: 'Asia/Kolkata',
       year: 'numeric',
       month: '2-digit',
       day: '2-digit'
     });
-    const [day, month, year] = todayKolkataStr.split('/');
+    const parts = formatter.formatToParts(now);
+    const year = parts.find(p => p.type === 'year')?.value;
+    const month = parts.find(p => p.type === 'month')?.value;
+    const day = parts.find(p => p.type === 'day')?.value;
     const todayKey = `${year}-${month}-${day}`;
     
     if (grouped[todayKey]) {
@@ -178,6 +183,12 @@ const AdminOrders = () => {
     a.click();
   };
 
+  const todayOrders = useMemo(
+    () => orders.filter((o) => isSameDay(parseISO(o.created_at), new Date())),
+    [orders]
+  );
+  const todayRevenue = todayOrders.reduce((sum, o) => sum + Number(o.total_amount ?? 0), 0);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -190,12 +201,6 @@ const AdminOrders = () => {
     localStorage.removeItem("liet-admin-authed");
     navigate("/admin");
   };
-
-  const todayOrders = useMemo(
-    () => orders.filter((o) => isSameDay(parseISO(o.created_at), new Date())),
-    [orders]
-  );
-  const todayRevenue = todayOrders.reduce((sum, o) => sum + Number(o.total_amount ?? 0), 0);
 
   return (
     <div className="min-h-screen bg-liet-bg">
